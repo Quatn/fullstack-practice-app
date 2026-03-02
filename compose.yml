@@ -1,0 +1,55 @@
+services:
+  mysql:
+    image: 'mysql:8.4.7'
+    environment:
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_USER: ${DB_USER}
+    volumes:
+      - db-data:/mnt/docker-volumes/db-data/demo-springboot
+    ports:
+      - "3306:3306"
+    healthcheck:
+      test: ["CMD", "mysql", 
+             "--host=localhost",
+             "--user=${DB_USER}",
+             "--password=${DB_PASSWORD}",
+             "--execute=USE ${DB_NAME}"]
+      interval: ${DB_HEALTHCHECK_INTERVAL}
+      timeout: ${DB_HEALTHCHECK_TIMEOUT}
+      retries: ${DB_HEALTHCHECK_RETRIES}
+
+  api:
+    build:
+      context: ./BE
+      dockerfile: Dockerfile
+    image: demo-springboot-api:latest
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/${DB_NAME}
+      SPRING_DATASOURCE_USERNAME: ${DB_USER}
+      SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - "4000:8080"
+    depends_on:
+      mysql:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "localhost:8080"]
+      interval: ${API_HEALTHCHECK_INTERVAL}
+      timeout: ${API_HEALTHCHECK_TIMEOUT}
+      retries: ${API_HEALTHCHECK_RETRIES}
+
+  web:
+    build:
+      context: ./FE
+      dockerfile: Dockerfile
+    image: demo-springboot-web:latest
+    ports:
+      - "3000:8080"
+    depends_on:
+      api:
+        condition: service_healthy
+
+volumes:
+  db-data:
