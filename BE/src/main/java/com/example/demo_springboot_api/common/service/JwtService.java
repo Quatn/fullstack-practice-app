@@ -1,6 +1,5 @@
-package com.example.demo_springboot_api.service;
+package com.example.demo_springboot_api.common.service;
 
-import java.security.Key;
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Value;

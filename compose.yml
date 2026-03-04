@@ -7,7 +7,7 @@ services:
       MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
       MYSQL_USER: ${DB_USER}
     volumes:
-      - db-data:/mnt/docker-volumes/db-data/demo-springboot
+      - db-data:/var/lib/mysql
     ports:
       - "3306:3306"
     healthcheck:
@@ -30,6 +30,8 @@ services:
       SPRING_DATASOURCE_USERNAME: ${DB_USER}
       SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}
       JWT_SECRET: ${JWT_SECRET}
+      WEB_URL: ${WEB_URL}
+      API_URL: ${API_URL}
     ports:
       - "4000:8080"
     depends_on:
@@ -46,6 +48,9 @@ services:
       context: ./FE
       dockerfile: Dockerfile
     image: demo-springboot-web:latest
+    environment:
+      WEB_URL: ${WEB_URL}
+      API_URL: ${API_URL}
     ports:
       - "3000:8080"
     depends_on:
