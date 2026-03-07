@@ -3,6 +3,8 @@
 import { Field } from "@/components/ui/field";
 import { PasswordInput } from "@/components/ui/password-input";
 import { toaster } from "@/components/ui/toaster";
+import { CODE_REGEX } from "@/constants/code-regex";
+import { PASSWORD_REGEX } from "@/constants/password-regex";
 import { useLoginMutation } from "@/service/api/authApiSlice";
 import { setCredentials } from "@/service/features/authSlice";
 import { useAppDispatch } from "@/service/hooks";
@@ -24,11 +26,24 @@ import {
 import check from "check-types";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { Controller, SubmitHandler, useForm } from "react-hook-form";
+import { ColorModeButton } from "../ui/color-mode";
+
+type LoginFormFields = {
+  code: string
+  password: string
+}
 
 export default function LoginBox() {
-  const [code, setCode] = useState("");
-  const [password, setPassword] = useState("");
+  const {
+    register,
+    handleSubmit,
+    watch,
+    control,
+    formState: { errors },
+    trigger,
+  } = useForm<LoginFormFields>()
+
   const router = useRouter();
 
   devlog("hi");
@@ -38,9 +53,11 @@ export default function LoginBox() {
   const [login, { isLoading: isLoggingIn, error: logInError }] =
     useLoginMutation();
 
-  const handleSubmit = async () => {
+  const onSubmit: SubmitHandler<LoginFormFields> = async (data) => {
+    console.log(data)
+
     try {
-      const response = await login({ code, password }).unwrap();
+      const response = await login(data).unwrap();
       const userData = response.data?.userState;
       if (!check.nonEmptyObject(userData)) {
         throw "Invalid login response";
@@ -52,30 +69,33 @@ export default function LoginBox() {
       });
       router.push("/");
     } catch { }
-  };
+  }
 
   return (
     <CardRoot w="lg">
       <CardHeader>
         <CardTitle>Đăng nhập</CardTitle>
         <CardDescription>
+          <ColorModeButton/>
         </CardDescription>
       </CardHeader>
       <CardBody>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit(onSubmit)}>
           <Stack gap="4" w="full">
             <Field label="Mã đăng nhập">
-              <Input
+              <Controller
                 name="code"
-                value={code}
-                onChange={(e) => setCode(e.currentTarget.value)}
+                control={control}
+                rules={{ required: true, pattern: CODE_REGEX, min: 3, max: 50, onChange: () => {trigger("code")} }}
+                render={({ field }) => <Input {...field} />}
               />
             </Field>
             <Field label="Mật khẩu">
-              <PasswordInput
+              <Controller
                 name="password"
-                value={password}
-                onChange={(e) => setPassword(e.currentTarget.value)}
+                control={control}
+                rules={{ required: true, pattern: PASSWORD_REGEX, min: 8, max: 200, onChange: () => {trigger("password")} }}
+                render={({ field }) => <PasswordInput {...field} />}
               />
             </Field>
             {logInError && (
@@ -96,7 +116,7 @@ export default function LoginBox() {
         <Link href={"/"}>
           <Button variant="outline">Về trang chủ</Button>
         </Link>
-        <Button colorPalette={"blue"} variant="solid" onClick={handleSubmit}>Đăng nhập</Button>
+        <Button disabled={!!errors.code || !!errors.password} colorPalette={"blue"} variant="solid" onClick={handleSubmit(onSubmit)}>Đăng nhập</Button>
       </CardFooter>
     </CardRoot>
   );
