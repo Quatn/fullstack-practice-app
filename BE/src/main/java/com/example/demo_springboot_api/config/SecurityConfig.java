@@ -18,11 +18,14 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
   private final JwtAuthFilter jwtAuthFilter;
   private final UserDetailsService userDetailsService;
+  private final PasswordEncoder encoder;
 
   // Constructor injection for required dependencies
-  public SecurityConfig(JwtAuthFilter jwtAuthFilter, UserDetailsService userDetailsService) {
+  public SecurityConfig(
+      JwtAuthFilter jwtAuthFilter, UserDetailsService userDetailsService, PasswordEncoder encoder) {
     this.jwtAuthFilter = jwtAuthFilter;
     this.userDetailsService = userDetailsService;
+    this.encoder = encoder;
   }
 
   @Bean
@@ -56,21 +59,13 @@ public class SecurityConfig {
   }
 
   /*
-   * Password encoder bean (uses BCrypt hashing)
-   */
-  @Bean
-  public PasswordEncoder passwordEncoder() {
-    return new BCryptPasswordEncoder();
-  }
-
-  /*
    * Authentication provider configuration
    * Links UserDetailsService and PasswordEncoder
    */
   @Bean
   public AuthenticationProvider authenticationProvider() {
     DaoAuthenticationProvider provider = new DaoAuthenticationProvider(userDetailsService);
-    provider.setPasswordEncoder(passwordEncoder());
+    provider.setPasswordEncoder(encoder);
     return provider;
   }
 }
