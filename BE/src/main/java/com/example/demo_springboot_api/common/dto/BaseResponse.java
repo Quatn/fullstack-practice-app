@@ -1,5 +1,8 @@
 package com.example.demo_springboot_api.common.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class BaseResponse<TData, TError> {
   public boolean success;
   public String message;

@@ -20,7 +20,7 @@ public class JwtService {
   public String generateToken(UserDetails userDetails) {
     return Jwts.builder()
         .subject(userDetails.getUsername())
-        .claim("roles", userDetails.getAuthorities())
+        .claim("accessPrivileges", userDetails.getAuthorities())
         .issuedAt(new Date())
         .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60))
         .signWith(getSignKey())
