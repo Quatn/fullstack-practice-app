@@ -1,4 +1,4 @@
-package com.example.demo_springboot_api.config;
+package com.example.demo_springboot_api.common.handler;
 
 import com.example.demo_springboot_api.common.dto.BaseResponse;
 import com.example.demo_springboot_api.common.errors.InvalidTokenException;
