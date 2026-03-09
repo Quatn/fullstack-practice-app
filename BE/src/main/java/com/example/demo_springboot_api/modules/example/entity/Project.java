@@ -1,4 +1,4 @@
-package com.example.demo_springboot_api.modules.user.entity;
+package com.example.demo_springboot_api.modules.example.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -10,12 +10,11 @@ import org.jspecify.annotations.Nullable;
 
 @Entity // This tells Hibernate to make a table out of this class
 @Table( // This is optional, but recommended for explicitness
-    name = "users",
+    name = "project",
     uniqueConstraints = {
       @UniqueConstraint(columnNames = "code"),
-      @UniqueConstraint(columnNames = "email")
     })
-public class User {
+public class Project {
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
   private @Nullable Integer id;
@@ -23,12 +22,6 @@ public class User {
   private String code;
 
   private String name;
-
-  private String email;
-
-  private String password;
-
-  private @Nullable String accessPrivileges;
 
   public Integer getId() {
     return id;
@@ -52,29 +45,5 @@ public class User {
 
   public void setName(String name) {
     this.name = name;
-  }
-
-  public String getEmail() {
-    return email;
-  }
-
-  public void setEmail(String email) {
-    this.email = email;
-  }
-
-  public String getPassword() {
-    return password;
-  }
-
-  public void setPassword(String password) {
-    this.password = password;
-  }
-
-  public String getAccessPrivileges() {
-    return accessPrivileges;
-  }
-
-  public void setAccessPrivileges(String accessPrivileges) {
-    this.accessPrivileges = accessPrivileges;
   }
 }

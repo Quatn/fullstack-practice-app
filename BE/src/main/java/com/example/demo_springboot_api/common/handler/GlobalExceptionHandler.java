@@ -34,6 +34,6 @@ public class GlobalExceptionHandler {
   public ResponseEntity<BaseResponse<String, String>> handleGeneral(Exception ex) {
     // Temporarily returns http 500 errors' messages for development, change before production
     return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-        .body(BaseResponse.error("Internal Server Error", ex.getMessage()));
+        .body(BaseResponse.error("Internal Server Error", ex.getStackTrace().toString()));
   }
 }
