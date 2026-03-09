@@ -24,7 +24,8 @@ public class JwtAuthController {
   }
 
   @GetMapping(path = "/refresh")
-  public @ResponseBody String refreshToken(@CookieValue("refresh-token") String refreshToken) {
+  public @ResponseBody String refreshToken(
+      @CookieValue(ModuleConstants.REFRESH_TOKEN_COOKIE_NAME) String refreshToken) {
 
     String username = jwtService.extractUsername(refreshToken);
     UserDetails userDetails = userDetailsService.loadUserByUsername(username);

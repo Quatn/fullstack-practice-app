@@ -5,6 +5,7 @@ import check from "check-types";
 
 const initialState: AuthState = {
   userState: null,
+  accessToken: null,
 };
 
 const authSlice = createSlice({
@@ -17,6 +18,7 @@ const authSlice = createSlice({
         if (check.string(localUserState)) {
           state.userState = JSON.parse(localUserState);
         }
+        state.accessToken = localStorage.getItem("accessToken");
       } catch (e) {
         devlog(e);
         localStorage.removeItem("userState");

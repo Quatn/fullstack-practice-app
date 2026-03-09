@@ -1,6 +1,7 @@
 package com.example.demo_springboot_api.modules.auth.service;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -8,6 +9,7 @@ import java.util.Date;
 import java.util.function.Function;
 import javax.crypto.SecretKey;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.util.Pair;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
@@ -17,14 +19,28 @@ public class JwtService {
   @Value("${JWT_SECRET}")
   private String SECRET;
 
+  @Value("${TOKEN_EXPIRATION_SECONDS}")
+  private long TOKEN_EXPIRATION_SECONDS;
+
   public String generateToken(UserDetails userDetails) {
     return Jwts.builder()
         .subject(userDetails.getUsername())
         .claim("accessPrivileges", userDetails.getAuthorities())
         .issuedAt(new Date())
-        .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60))
+        .expiration(new Date(System.currentTimeMillis() + 1000 * TOKEN_EXPIRATION_SECONDS))
         .signWith(getSignKey())
         .compact();
+  }
+
+  public String generateToken(
+      String subject, Pair<String, String>[] claims, Date issuedAt, Date expiration) {
+    JwtBuilder builder = Jwts.builder().subject(subject).issuedAt(issuedAt).expiration(expiration);
+
+    for (Pair<String, String> claim : claims) {
+      builder.claim(claim.getFirst(), claim.getSecond());
+    }
+
+    return builder.signWith(getSignKey()).compact();
   }
 
   private Claims extractAllClaims(String token) {
