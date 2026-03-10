@@ -1,5 +1,6 @@
 package com.example.demo_springboot_api.modules.auth.controller;
 
+import com.example.demo_springboot_api.common.service.HashingService;
 import com.example.demo_springboot_api.modules.auth.constant.ModuleConstants;
 import com.example.demo_springboot_api.modules.auth.dto.LoginResponse;
 import com.example.demo_springboot_api.modules.auth.service.AuthService;
@@ -8,6 +9,7 @@ import com.example.demo_springboot_api.modules.auth.service.ConfiguredUserDetail
 import com.example.demo_springboot_api.modules.auth.service.JwtService;
 import com.example.demo_springboot_api.modules.user.entity.User;
 import java.util.Date;
+import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.util.Pair;
@@ -39,6 +41,8 @@ public class AuthController {
 
   @Autowired private AuthSessionService authSessionService;
 
+  @Autowired private HashingService hashingService;
+
   @PostMapping(path = "/login")
   public @ResponseBody ResponseEntity<LoginResponse> login(
       @RequestParam String loginKey, @RequestParam String password) {
@@ -49,16 +53,24 @@ public class AuthController {
       Date createdDate = new Date(now);
       Date expirationDate = new Date(now + 1000 * REFRESH_TOKEN_EXPIRATION_SECONDS);
 
+      String uuid = UUID.randomUUID().toString();
+
       @SuppressWarnings("unchecked")
       String refreshToken =
           jwtService.generateToken(
-              "refresh_token",
+              uuid,
               new Pair[] {Pair.of("secret", REFRESH_TOKEN_SECRET)},
               createdDate,
               expirationDate);
 
       authSessionService.addSession(
-          user, encoder.encode(refreshToken), createdDate, expirationDate, false, "" /* TODO */);
+          user,
+          hashingService.hash(refreshToken),
+          uuid,
+          createdDate,
+          expirationDate,
+          false,
+          "" /* TODO: Get system info too */);
 
       ResponseCookie cookie =
           ResponseCookie.from(ModuleConstants.REFRESH_TOKEN_COOKIE_NAME, refreshToken)

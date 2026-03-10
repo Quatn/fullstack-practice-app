@@ -28,6 +28,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { ColorModeButton } from "../ui/color-mode";
+import { config } from "@/config/config";
 
 type LoginFormFields = {
   code: string
@@ -76,7 +77,7 @@ export default function LoginBox() {
       <CardHeader>
         <CardTitle>Đăng nhập</CardTitle>
         <CardDescription>
-          <ColorModeButton/>
+          <ColorModeButton />
         </CardDescription>
       </CardHeader>
       <CardBody>
@@ -86,7 +87,7 @@ export default function LoginBox() {
               <Controller
                 name="code"
                 control={control}
-                rules={{ required: true, pattern: CODE_REGEX, min: 3, max: 50, onChange: () => {trigger("code")} }}
+                rules={{ required: true, pattern: CODE_REGEX, min: config.MIN_USER_CODE_LENGTH, max: config.MAX_USER_CODE_LENGTH, onChange: () => { trigger("code") } }}
                 render={({ field }) => <Input {...field} />}
               />
             </Field>
@@ -94,7 +95,7 @@ export default function LoginBox() {
               <Controller
                 name="password"
                 control={control}
-                rules={{ required: true, pattern: PASSWORD_REGEX, min: 8, max: 200, onChange: () => {trigger("password")} }}
+                rules={{ required: true, pattern: PASSWORD_REGEX, min: config.MIN_PASSWORD_LENGTH, max: config.MAX_PASSWORD_LENGTH, onChange: () => { trigger("password") } }}
                 render={({ field }) => <PasswordInput {...field} />}
               />
             </Field>

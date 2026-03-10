@@ -4,6 +4,7 @@ import com.example.demo_springboot_api.common.dto.BaseResponse;
 import com.example.demo_springboot_api.common.errors.InvalidTokenException;
 import com.example.demo_springboot_api.common.errors.UserNotFoundException;
 import io.jsonwebtoken.MalformedJwtException;
+import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -32,8 +33,14 @@ public class GlobalExceptionHandler {
 
   @ExceptionHandler(Exception.class)
   public ResponseEntity<BaseResponse<String, String>> handleGeneral(Exception ex) {
+    String errors =
+        String.join(
+            ", ", List.of(ex.getStackTrace()).stream().map((trace) -> trace.toString()).toList());
+
     // Temporarily returns http 500 errors' messages for development, change before production
     return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-        .body(BaseResponse.error("Internal Server Error", ex.getStackTrace().toString()));
+        .body(
+            BaseResponse.error(
+                "Internal Server Error: " + ex.getMessage(), errors));
   }
 }

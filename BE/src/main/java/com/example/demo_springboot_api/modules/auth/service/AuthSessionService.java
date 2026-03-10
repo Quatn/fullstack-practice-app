@@ -14,6 +14,7 @@ public class AuthSessionService {
   public AuthSession addSession(
       User user,
       String tokenHash,
+      String uuid,
       Date createdAt,
       Date expiresAt,
       Boolean revoked,
@@ -21,6 +22,7 @@ public class AuthSessionService {
     AuthSession session = new AuthSession();
     session.setUser(user);
     session.setTokenHash(tokenHash);
+    session.setUUID(uuid);
     session.setCreatedAt(createdAt);
     session.setExpiresAt(expiresAt);
     session.setRevoked(revoked);

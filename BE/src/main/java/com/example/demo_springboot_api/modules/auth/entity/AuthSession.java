@@ -31,6 +31,8 @@ public class AuthSession {
 
   private String tokenHash;
 
+  private String uuid;
+
   private Date createdAt;
 
   private Date expiresAt;
@@ -59,8 +61,16 @@ public class AuthSession {
     return tokenHash;
   }
 
-  public void setTokenHash(String tokenHash) {
-    this.tokenHash = tokenHash;
+  public void setTokenHash(String uuid) {
+    this.uuid = uuid;
+  }
+
+  public String getUUID() {
+    return uuid;
+  }
+
+  public void setUUID(String uuid) {
+    this.uuid = uuid;
   }
 
   public Date getCreatedAt() {

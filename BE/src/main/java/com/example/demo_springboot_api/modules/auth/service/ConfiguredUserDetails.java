@@ -1,7 +1,6 @@
 package com.example.demo_springboot_api.modules.auth.service;
 
 import com.example.demo_springboot_api.modules.user.entity.User;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -19,9 +18,7 @@ public class ConfiguredUserDetails implements UserDetails {
   public ConfiguredUserDetails(User userInfo) {
     this.username = userInfo.getEmail(); // Use email as username
     this.password = userInfo.getPassword();
-    this.authorities = new ArrayList<>();
 
-    /*
     String accessPrivileges = userInfo.getAccessPrivileges();
     if (accessPrivileges == null || accessPrivileges.isBlank()) {
       this.authorities = new ArrayList<>();
@@ -31,7 +28,6 @@ public class ConfiguredUserDetails implements UserDetails {
               .map(SimpleGrantedAuthority::new)
               .collect(Collectors.toList());
     }
-    */
   }
 
   @Override
