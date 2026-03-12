@@ -1,5 +1,5 @@
 import passwordConfig from "@/config/password-config.json"
-import userCodeConfig from "@/config/user-code-config.json"
+import userInfoConfig from "@/config/user-info-config.json"
 import { ConfigurationError } from "@/lib/errors/ConfigurationError"
 import check from "check-types";
 
@@ -23,13 +23,16 @@ check.map(passwordConfig, {
     "MIN_PASSWORD_LENGTH must be between MIN_PASSWORD_LENGTH and 72. Due to the algorithm used to hash passwords, MAX_PASSWORD_LENGTH cannot be more than 72."),
 })
 
-check.all(check.map(userCodeConfig, {
+check.all(check.map(userInfoConfig, {
   MIN_USER_CODE_LENGTH: assert(
-    (l) => check.inRange(l, 1, userCodeConfig.MAX_USER_CODE_LENGTH),
-    "MIN_USER_CODE_LENGTH must be between 1 and MAX_USER_CODE_LENGTH")
+    (l) => check.inRange(l, 1, userInfoConfig.MAX_USER_CODE_LENGTH),
+    "MIN_USER_CODE_LENGTH must be between 1 and MAX_USER_CODE_LENGTH"),
+  MIN_USER_NAME_LENGTH: assert(
+    (l) => check.inRange(l, 1, userInfoConfig.MAX_USER_NAME_LENGTH),
+    "MIN_USER_CODE_LENGTH must be between 1 and MAX_USER_CODE_LENGTH"),
 }))
 
 export const config = {
   ...passwordConfig,
-  ...userCodeConfig,
+  ...userInfoConfig,
 }

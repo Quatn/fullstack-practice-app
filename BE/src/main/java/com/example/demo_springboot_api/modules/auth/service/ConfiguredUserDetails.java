@@ -9,14 +9,20 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+// Convert User data entity into UserDetails, which is what Spring Security uses under the hood for
+// security protocols
+// UserDetails uses a username field and a password field for authentication, those are mapped to
+// the code field and password field of the User entity.
 public class ConfiguredUserDetails implements UserDetails {
 
-  private String username; // Changed from 'name' to 'email' for clarity
+  private User user;
+  private String username;
   private String password;
   private List<GrantedAuthority> authorities;
 
   public ConfiguredUserDetails(User userInfo) {
-    this.username = userInfo.getEmail(); // Use email as username
+    this.user = userInfo;
+    this.username = userInfo.getCode(); // Use user login code as username
     this.password = userInfo.getPassword();
 
     String accessPrivileges = userInfo.getAccessPrivileges();
@@ -63,5 +69,9 @@ public class ConfiguredUserDetails implements UserDetails {
   @Override
   public String getPassword() {
     return password;
+  }
+
+  public User getUser() {
+    return user;
   }
 }

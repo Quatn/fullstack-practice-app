@@ -7,26 +7,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+// Bridges UserService (which does the normal data operation), with UserDetailsService, which
+// provides user data for Spring Security.
+// UserDetailsService uses UserDetails class, which have a username field and a password field that
+// corresponse to some fields on the User entity.
 @Service
 public class ConfiguredUserDetailsService implements UserDetailsService {
 
-  private final UserRepository repository;
-  private final PasswordEncoder encoder;
+  @Autowired private UserRepository repository;
 
-  @Autowired
-  public ConfiguredUserDetailsService(UserRepository repository, PasswordEncoder encoder) {
-    this.repository = repository;
-    this.encoder = encoder;
-  }
-
-  // Method to load user details by username (email)
+  // Method to load user details by username
   @Override
   public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-    // Fetch user from the database by email (username)
-    Optional<User> userInfo = repository.findByEmail(username);
+    // Fetch user from the database by user login code
+    Optional<User> userInfo = repository.findByCode(username);
 
     if (userInfo.isEmpty()) {
       throw new UsernameNotFoundException("User not found with email: " + username);
@@ -34,13 +30,5 @@ public class ConfiguredUserDetailsService implements UserDetailsService {
 
     // Convert UserInfo to UserDetails (UserInfoDetails)
     return new ConfiguredUserDetails(userInfo.get());
-  }
-
-  // Add any additional methods for registering or managing users
-  public String addUser(User userInfo) {
-    // Encrypt password before saving
-    userInfo.setPassword(encoder.encode(userInfo.getPassword()));
-    repository.save(userInfo);
-    return "User added successfully!";
   }
 }

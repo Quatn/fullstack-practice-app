@@ -1,12 +1,10 @@
 import { UserState } from "@/types/UserState";
 import { BaseResponse } from "../BaseResponse";
 
-export class LoginRequest {
-  loginKey: string;
-  password: string;
-}
+export class TokenRefreshRequest { }
 
-export class LoginResponse extends BaseResponse<{
+export class TokenRefreshResponse extends BaseResponse<{
   userState: UserState;
+  accessToken: string;
 }> { }
 

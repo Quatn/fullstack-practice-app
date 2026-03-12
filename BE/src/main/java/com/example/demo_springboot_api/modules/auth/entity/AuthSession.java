@@ -10,6 +10,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
+import jakarta.validation.constraints.NotNull;
 import java.util.Date;
 import org.jspecify.annotations.Nullable;
 
@@ -29,17 +30,17 @@ public class AuthSession {
   @JoinColumn(name = "user_id", nullable = false)
   private User user;
 
-  private String tokenHash;
+  @NotNull private String tokenHash;
 
-  private String uuid;
+  @NotNull private String uuid;
 
-  private Date createdAt;
+  @NotNull private Date createdAt;
 
-  private Date expiresAt;
+  @NotNull private Date expiresAt;
 
-  private Boolean revoked;
+  @NotNull private Boolean revoked;
 
-  private String deviceInfo;
+  @NotNull private String deviceInfo;
 
   public Integer getId() {
     return id;
@@ -61,8 +62,8 @@ public class AuthSession {
     return tokenHash;
   }
 
-  public void setTokenHash(String uuid) {
-    this.uuid = uuid;
+  public void setTokenHash(String tokenHash) {
+    this.tokenHash = tokenHash;
   }
 
   public String getUUID() {

@@ -77,4 +77,11 @@ public class User {
   public void setAccessPrivileges(String accessPrivileges) {
     this.accessPrivileges = accessPrivileges;
   }
+
+  public String[] getAccessPrivilegesArray() {
+    if (accessPrivileges == null) {
+      return new String[0];
+    }
+    return accessPrivileges.split(",");
+  }
 }

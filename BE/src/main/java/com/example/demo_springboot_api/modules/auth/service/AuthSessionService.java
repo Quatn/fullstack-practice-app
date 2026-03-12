@@ -1,9 +1,11 @@
 package com.example.demo_springboot_api.modules.auth.service;
 
+import com.example.demo_springboot_api.common.errors.InvalidAuthSessionException;
 import com.example.demo_springboot_api.modules.auth.entity.AuthSession;
 import com.example.demo_springboot_api.modules.auth.repository.AuthSessionRepository;
 import com.example.demo_springboot_api.modules.user.entity.User;
 import java.util.Date;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -29,5 +31,15 @@ public class AuthSessionService {
     session.setDeviceInfo(deviceInfo);
 
     return authSessionRepository.save(session);
+  }
+
+  public AuthSession findByUUID(String uuid) {
+    Optional<AuthSession> queryResult = authSessionRepository.findByUuid(uuid);
+
+    if (queryResult.isEmpty()) {
+      throw new InvalidAuthSessionException("AuthSession with the given UUID does not exists");
+    }
+
+    return queryResult.get();
   }
 }

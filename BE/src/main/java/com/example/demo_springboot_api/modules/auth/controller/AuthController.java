@@ -1,13 +1,18 @@
 package com.example.demo_springboot_api.modules.auth.controller;
 
+import com.example.demo_springboot_api.common.errors.InvalidDataException;
 import com.example.demo_springboot_api.common.service.HashingService;
 import com.example.demo_springboot_api.modules.auth.constant.ModuleConstants;
+import com.example.demo_springboot_api.modules.auth.dto.LoginRequest;
 import com.example.demo_springboot_api.modules.auth.dto.LoginResponse;
+import com.example.demo_springboot_api.modules.auth.dto.RegisterRequest;
+import com.example.demo_springboot_api.modules.auth.dto.RegisterResponse;
+import com.example.demo_springboot_api.modules.auth.dto.UserState;
 import com.example.demo_springboot_api.modules.auth.service.AuthService;
 import com.example.demo_springboot_api.modules.auth.service.AuthSessionService;
-import com.example.demo_springboot_api.modules.auth.service.ConfiguredUserDetails;
 import com.example.demo_springboot_api.modules.auth.service.JwtService;
 import com.example.demo_springboot_api.modules.user.entity.User;
+import com.example.demo_springboot_api.modules.user.service.UserService;
 import java.util.Date;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,9 +25,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+record AuthResponseDataBundle(ResponseCookie cookie, UserState userState) {}
 
 @Controller
 @RequestMapping(ModuleConstants.BASE_PATH)
@@ -39,56 +46,90 @@ public class AuthController {
 
   @Autowired private AuthService authService;
 
+  @Autowired private UserService userService;
+
   @Autowired private AuthSessionService authSessionService;
 
   @Autowired private HashingService hashingService;
 
   @PostMapping(path = "/login")
-  public @ResponseBody ResponseEntity<LoginResponse> login(
-      @RequestParam String loginKey, @RequestParam String password) {
-
-    User user = authService.login(loginKey, password);
-    if (encoder.matches(password, user.getPassword())) {
-      long now = System.currentTimeMillis();
-      Date createdDate = new Date(now);
-      Date expirationDate = new Date(now + 1000 * REFRESH_TOKEN_EXPIRATION_SECONDS);
-
-      String uuid = UUID.randomUUID().toString();
-
-      @SuppressWarnings("unchecked")
-      String refreshToken =
-          jwtService.generateToken(
-              uuid,
-              new Pair[] {Pair.of("secret", REFRESH_TOKEN_SECRET)},
-              createdDate,
-              expirationDate);
-
-      authSessionService.addSession(
-          user,
-          hashingService.hash(refreshToken),
-          uuid,
-          createdDate,
-          expirationDate,
-          false,
-          "" /* TODO: Get system info too */);
-
-      ResponseCookie cookie =
-          ResponseCookie.from(ModuleConstants.REFRESH_TOKEN_COOKIE_NAME, refreshToken)
-              .httpOnly(true)
-              .secure(true)
-              .maxAge(REFRESH_TOKEN_EXPIRATION_SECONDS)
-              .sameSite("Strict")
-              .build();
+  public @ResponseBody ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginForm) {
+    User user = authService.login(loginForm.loginKey(), loginForm.password());
+    if (encoder.matches(loginForm.password(), user.getPassword())) {
+      AuthResponseDataBundle bundle = addAuthSessionAndCreateCookie(user);
 
       return ResponseEntity.status(HttpStatus.OK)
-          .header(HttpHeaders.SET_COOKIE, cookie.toString())
-          .body(
-              LoginResponse.success(
-                  "Login successfully", jwtService.generateToken(new ConfiguredUserDetails(user))));
+          .header(HttpHeaders.SET_COOKIE, bundle.cookie().toString())
+          .body(LoginResponse.success("Login successfully", bundle.userState()));
     }
 
     return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
         .body(LoginResponse.error("Login unsuccessfully", "Wrong email or password"));
+  }
+
+  @PostMapping(path = "/register")
+  public @ResponseBody ResponseEntity<RegisterResponse> register(
+      @RequestBody RegisterRequest registerForm) {
+
+    if (!authService.checkCodeAvailable(registerForm.code())) {
+      throw new InvalidDataException("Unable to register: user code already taken.");
+    }
+
+    if (!authService.checkEmailAvailable(registerForm.email())) {
+      throw new InvalidDataException("Unable to register: email already taken.");
+    }
+
+    User n = new User();
+    n.setCode(registerForm.code());
+    n.setName(registerForm.name());
+    n.setEmail(registerForm.email());
+    n.setPassword(registerForm.password());
+    User user = userService.addUser(n);
+
+    AuthResponseDataBundle bundle = addAuthSessionAndCreateCookie(user);
+
+    return ResponseEntity.status(HttpStatus.OK)
+        .header(HttpHeaders.SET_COOKIE, bundle.cookie().toString())
+        .body(RegisterResponse.success("Register successfully", bundle.userState()));
+  }
+
+  private AuthResponseDataBundle addAuthSessionAndCreateCookie(User user) {
+    long now = System.currentTimeMillis();
+    Date createdDate = new Date(now);
+    Date expirationDate = new Date(now + 1000 * REFRESH_TOKEN_EXPIRATION_SECONDS);
+
+    String uuid = UUID.randomUUID().toString();
+
+    @SuppressWarnings("unchecked")
+    String refreshToken =
+        jwtService.generateToken(
+            uuid,
+            new Pair[] {Pair.of("secret", REFRESH_TOKEN_SECRET)},
+            createdDate,
+            expirationDate);
+
+    authSessionService.addSession(
+        user,
+        hashingService.hash(refreshToken),
+        uuid,
+        createdDate,
+        expirationDate,
+        false,
+        "" /* TODO: Get system info too */);
+
+    UserState userState = new UserState(user);
+
+    ResponseCookie cookie =
+        ResponseCookie.from(ModuleConstants.REFRESH_TOKEN_COOKIE_NAME, refreshToken)
+            .httpOnly(true)
+            .secure(true)
+            .maxAge(REFRESH_TOKEN_EXPIRATION_SECONDS)
+            .sameSite("None")
+            .build();
+
+    // String accessToken = jwtService.generateToken(new ConfiguredUserDetails(user));
+
+    return new AuthResponseDataBundle(cookie, userState);
   }
 
   /*

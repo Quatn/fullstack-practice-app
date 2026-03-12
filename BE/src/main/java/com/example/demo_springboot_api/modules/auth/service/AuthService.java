@@ -12,12 +12,20 @@ public class AuthService {
   @Autowired private UserRepository userRepository;
 
   public User login(String loginKey, String password) {
-    Optional<User> userQuery = userRepository.findByEmail(loginKey);
+    Optional<User> userQuery = userRepository.findByCode(loginKey);
 
     if (userQuery.isEmpty()) {
-      throw new UserNotFoundException("User with provided email does not exists.");
+      throw new UserNotFoundException("User with provided code does not exists.");
     }
 
     return userQuery.get();
+  }
+
+  public Boolean checkCodeAvailable(String code) {
+    return userRepository.checkCodeAvailable(code);
+  }
+
+  public Boolean checkEmailAvailable(String email) {
+    return userRepository.checkEmailAvailable(email);
   }
 }

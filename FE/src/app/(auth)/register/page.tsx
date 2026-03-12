@@ -1,4 +1,4 @@
-import LoginBox from "@/components/auth/LoginBox";
+import RegisterBox from "@/components/auth/RegisterBox";
 import { ColorModeButton } from "@/components/ui/color-mode";
 import { Center, HStack, Stack } from "@chakra-ui/react";
 
@@ -9,7 +9,7 @@ export default function Page() {
         <ColorModeButton />
       </HStack>
       <Center flexGrow={1}>
-        <LoginBox />
+        <RegisterBox />
       </Center>
     </Stack>
   );

@@ -9,4 +9,6 @@ import org.springframework.data.repository.CrudRepository;
 
 public interface AuthSessionRepository extends CrudRepository<AuthSession, Integer> {
   Optional<AuthSession> findByUserId(String userId);
+
+  Optional<AuthSession> findByUuid(String uuid);
 }

@@ -15,18 +15,27 @@ export default function AuthenticatedContent(
   const hydrating: boolean = useAppSelector((state) =>
     state.auth.hydrating
   );
+
+  const refreshingToken: boolean = useAppSelector((state) =>
+    state.auth.refreshingToken
+  );
+
   const userState: UserState | null = useAppSelector((state) =>
     state.auth.userState
   );
 
-  if (hydrating) {
+  const accessToken: string | null = useAppSelector((state) =>
+    state.auth.accessToken
+  );
+
+  if (hydrating || refreshingToken) {
     if (loading) {
       return loading
     }
     return <div />
   }
 
-  if (check.null(userState)) {
+  if (check.null(accessToken) || check.null(userState)) {
     if (unauthenticatedContent) {
       /*
       if (throwErrorAction) {

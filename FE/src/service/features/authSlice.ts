@@ -6,11 +6,13 @@ import check from "check-types";
 const initialState: AuthState = {
   userState: null,
   accessToken: null,
+  hydrating: true,
+  refreshingToken: true,
 };
 
 const authSlice = createSlice({
   name: "auth",
-  initialState: { ...initialState, hydrating: true },
+  initialState: initialState,
   reducers: {
     hydrate: (state) => {
       try {
@@ -18,7 +20,7 @@ const authSlice = createSlice({
         if (check.string(localUserState)) {
           state.userState = JSON.parse(localUserState);
         }
-        state.accessToken = localStorage.getItem("accessToken");
+        // state.accessToken = localStorage.getItem("accessToken");
       } catch (e) {
         devlog(e);
         localStorage.removeItem("userState");
@@ -38,9 +40,18 @@ const authSlice = createSlice({
       localStorage.removeItem("userState");
       localStorage.removeItem("expirationTime");
     },
+    setAccessToken: (state, action) => {
+      state.accessToken = action.payload;
+    },
+    clearAccessToken: (state) => {
+      state.accessToken = null;
+    },
+    setRefreshingToken: (state, action) => {
+      state.refreshingToken = action.payload;
+    },
   },
 });
 
-export const { hydrate, setCredentials, clearCredentials } = authSlice.actions;
+export const { hydrate, setCredentials, clearCredentials, setAccessToken, clearAccessToken, setRefreshingToken } = authSlice.actions;
 
 export default authSlice.reducer;
