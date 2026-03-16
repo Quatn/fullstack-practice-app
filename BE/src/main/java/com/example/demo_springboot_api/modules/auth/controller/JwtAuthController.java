@@ -25,7 +25,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 @RequestMapping(ModuleConstants.BASE_PATH + "/token")
 public class JwtAuthController {
-  @Autowired private ConfiguredUserDetailsService userDetailsService;
   @Autowired private AuthSessionService authSessionService;
   @Autowired private HashingService hashingService;
   @Autowired private JwtService jwtService;

@@ -6,6 +6,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
+import java.util.Date;
 import org.jspecify.annotations.Nullable;
 
 @Entity // This tells Hibernate to make a table out of this class
@@ -18,7 +19,7 @@ import org.jspecify.annotations.Nullable;
 public class User {
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
-  private @Nullable Integer id;
+  private @Nullable Long id;
 
   private String code;
 
@@ -30,11 +31,15 @@ public class User {
 
   private @Nullable String accessPrivileges;
 
-  public Integer getId() {
+  private Date createdAt;
+
+  private Date updatedAt;
+
+  public Long getId() {
     return id;
   }
 
-  public void setId(Integer id) {
+  public void setId(Long id) {
     this.id = id;
   }
 
@@ -83,5 +88,21 @@ public class User {
       return new String[0];
     }
     return accessPrivileges.split(",");
+  }
+
+  public Date getCreatedAt() {
+    return createdAt;
+  }
+
+  public void setCreatedat(Date createdAt) {
+    this.createdAt = createdAt;
+  }
+
+  public Date getUpdatedat() {
+    return updatedAt;
+  }
+
+  public void setUpdatedat(Date updatedAt) {
+    this.updatedAt = updatedAt;
   }
 }

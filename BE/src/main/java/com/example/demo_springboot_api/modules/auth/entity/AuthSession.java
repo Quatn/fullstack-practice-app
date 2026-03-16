@@ -17,14 +17,11 @@ import org.jspecify.annotations.Nullable;
 @Entity // This tells Hibernate to make a table out of this class
 @Table( // This is optional, but recommended for explicitness
     name = "auth_sessions",
-    uniqueConstraints = {
-      @UniqueConstraint(columnNames = "code"),
-      @UniqueConstraint(columnNames = "email")
-    })
+    uniqueConstraints = {@UniqueConstraint(columnNames = "uuid")})
 public class AuthSession {
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
-  private @Nullable Integer id;
+  private @Nullable Long id;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "user_id", nullable = false)
@@ -40,13 +37,13 @@ public class AuthSession {
 
   @NotNull private Boolean revoked;
 
-  @NotNull private String deviceInfo;
+  private String deviceInfo;
 
-  public Integer getId() {
+  public Long getId() {
     return id;
   }
 
-  public void setId(Integer id) {
+  public void setId(Long id) {
     this.id = id;
   }
 

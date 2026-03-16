@@ -19,7 +19,7 @@ public class UserService {
     return userRepository.save(userInfo);
   }
 
-  public User findById(Integer id) {
+  public User findById(Long id) {
     Optional<User> queryResult = userRepository.findById(id);
 
     if (queryResult.isEmpty()) {

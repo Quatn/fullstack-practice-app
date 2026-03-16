@@ -5,7 +5,7 @@ import org.springframework.data.repository.NoRepositoryBean;
 import org.springframework.data.repository.Repository;
 
 @NoRepositoryBean
-public interface IUserDSLRepository extends Repository<User, Integer> {
+public interface IUserDSLRepository extends Repository<User, Long> {
   public Boolean checkCodeAvailable(String code);
 
   public Boolean checkEmailAvailable(String email);

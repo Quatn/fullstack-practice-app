@@ -10,7 +10,7 @@ import org.springframework.data.repository.CrudRepository;
 // CRUD refers Create, Read, Update, Delete
 
 public interface UserRepository
-    extends CrudRepository<User, Integer>, QuerydslPredicateExecutor<User>, IUserDSLRepository {
+    extends CrudRepository<User, Long>, QuerydslPredicateExecutor<User>, IUserDSLRepository {
   Optional<User> findByCode(String code);
 
   Optional<User> findByEmail(String email);

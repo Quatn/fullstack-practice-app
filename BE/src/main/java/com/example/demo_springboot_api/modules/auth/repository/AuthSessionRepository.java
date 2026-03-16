@@ -7,7 +7,7 @@ import org.springframework.data.repository.CrudRepository;
 // This will be AUTO IMPLEMENTED by Spring into a Bean called userRepository
 // CRUD refers Create, Read, Update, Delete
 
-public interface AuthSessionRepository extends CrudRepository<AuthSession, Integer> {
+public interface AuthSessionRepository extends CrudRepository<AuthSession, Long> {
   Optional<AuthSession> findByUserId(String userId);
 
   Optional<AuthSession> findByUuid(String uuid);
