@@ -1,6 +1,7 @@
 package com.example.demo_springboot_api.common.handler;
 
 import com.example.demo_springboot_api.common.dto.BaseResponse;
+import com.example.demo_springboot_api.common.errors.DataNotFoundException;
 import com.example.demo_springboot_api.common.errors.InvalidDataException;
 import com.example.demo_springboot_api.common.errors.InvalidTokenException;
 import com.example.demo_springboot_api.common.errors.UserNotFoundException;
@@ -21,6 +22,12 @@ public class GlobalExceptionHandler {
   public ResponseEntity<BaseResponse<String, String>> handleUserNotFound(UserNotFoundException ex) {
     return ResponseEntity.status(HttpStatus.NOT_FOUND)
         .body(BaseResponse.error("User not found", ex.getMessage()));
+  }
+
+  @ExceptionHandler(DataNotFoundException.class)
+  public ResponseEntity<BaseResponse<String, String>> handleUserNotFound(DataNotFoundException ex) {
+    return ResponseEntity.status(HttpStatus.NOT_FOUND)
+        .body(BaseResponse.error("Data not found", ex.getMessage()));
   }
 
   @ExceptionHandler(InvalidTokenException.class)
