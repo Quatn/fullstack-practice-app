@@ -1,4 +1,4 @@
-package com.example.demo_springboot_api.modules.user.repository.dsl;
+package com.example.demo_springboot_api.modules.user.repository.impl;
 
 import com.example.demo_springboot_api.modules.user.entity.QUser;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class UserRepositoryImpl implements IUserDSLRepository {
+public class UserRepositoryImpl implements IUserRepositoryImpl {
   @Autowired private JPAQueryFactory queryFactory;
 
   public Boolean checkCodeAvailable(String code) {

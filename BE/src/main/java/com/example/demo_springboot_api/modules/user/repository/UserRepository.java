@@ -1,7 +1,7 @@
 package com.example.demo_springboot_api.modules.user.repository;
 
 import com.example.demo_springboot_api.modules.user.entity.User;
-import com.example.demo_springboot_api.modules.user.repository.dsl.IUserDSLRepository;
+import com.example.demo_springboot_api.modules.user.repository.impl.IUserRepositoryImpl;
 import java.util.Optional;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import org.springframework.data.repository.CrudRepository;
@@ -10,7 +10,7 @@ import org.springframework.data.repository.CrudRepository;
 // CRUD refers Create, Read, Update, Delete
 
 public interface UserRepository
-    extends CrudRepository<User, Long>, QuerydslPredicateExecutor<User>, IUserDSLRepository {
+    extends CrudRepository<User, Long>, QuerydslPredicateExecutor<User>, IUserRepositoryImpl {
   Optional<User> findByCode(String code);
 
   Optional<User> findByEmail(String email);
