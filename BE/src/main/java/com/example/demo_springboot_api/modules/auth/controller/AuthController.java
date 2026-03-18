@@ -1,7 +1,7 @@
 package com.example.demo_springboot_api.modules.auth.controller;
 
+import com.example.demo_springboot_api.common.encoder.token.TokenEncoder;
 import com.example.demo_springboot_api.common.errors.InvalidDataException;
-import com.example.demo_springboot_api.common.service.HashingService;
 import com.example.demo_springboot_api.modules.auth.constant.ModuleConstants;
 import com.example.demo_springboot_api.modules.auth.dto.LoginRequest;
 import com.example.demo_springboot_api.modules.auth.dto.LoginResponse;
@@ -50,7 +50,7 @@ public class AuthController {
 
   @Autowired private AuthSessionService authSessionService;
 
-  @Autowired private HashingService hashingService;
+  @Autowired private TokenEncoder tokenEncoder;
 
   @PostMapping(path = "/login")
   public @ResponseBody ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginForm) {
@@ -110,7 +110,7 @@ public class AuthController {
 
     authSessionService.addSession(
         user,
-        hashingService.hash(refreshToken),
+        tokenEncoder.encode(refreshToken),
         uuid,
         createdDate,
         expirationDate,

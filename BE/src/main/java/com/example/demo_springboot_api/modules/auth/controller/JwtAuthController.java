@@ -1,15 +1,14 @@
 package com.example.demo_springboot_api.modules.auth.controller;
 
+import com.example.demo_springboot_api.common.encoder.token.TokenEncoder;
 import com.example.demo_springboot_api.common.errors.ExpiredAuthSessionException;
 import com.example.demo_springboot_api.common.errors.InvalidAuthSessionException;
-import com.example.demo_springboot_api.common.service.HashingService;
 import com.example.demo_springboot_api.modules.auth.constant.ModuleConstants;
 import com.example.demo_springboot_api.modules.auth.dto.TokenRefreshResponse;
 import com.example.demo_springboot_api.modules.auth.dto.UserState;
 import com.example.demo_springboot_api.modules.auth.entity.AuthSession;
 import com.example.demo_springboot_api.modules.auth.service.AuthSessionService;
 import com.example.demo_springboot_api.modules.auth.service.ConfiguredUserDetails;
-import com.example.demo_springboot_api.modules.auth.service.ConfiguredUserDetailsService;
 import com.example.demo_springboot_api.modules.auth.service.JwtService;
 import com.example.demo_springboot_api.modules.user.entity.User;
 import java.util.Date;
@@ -26,7 +25,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @RequestMapping(ModuleConstants.BASE_PATH + "/token")
 public class JwtAuthController {
   @Autowired private AuthSessionService authSessionService;
-  @Autowired private HashingService hashingService;
+  @Autowired private TokenEncoder tokenEncoder;
   @Autowired private JwtService jwtService;
 
   @GetMapping(path = "/refresh")
@@ -37,7 +36,7 @@ public class JwtAuthController {
     AuthSession session = authSessionService.findByUUID(tokenUUID);
 
     String storedHash = session.getTokenHash();
-    if (!hashingService.matches(refreshToken, storedHash)) {
+    if (!tokenEncoder.matches(refreshToken, storedHash)) {
       throw new InvalidAuthSessionException("Auth session hash does not match server-stored hash");
     }
 

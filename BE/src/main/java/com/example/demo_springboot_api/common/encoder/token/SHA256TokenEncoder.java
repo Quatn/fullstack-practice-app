@@ -1,17 +1,14 @@
-package com.example.demo_springboot_api.common.service;
+package com.example.demo_springboot_api.common.encoder.token;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.HexFormat;
-import org.springframework.stereotype.Component;
 
-@Component
-public class HashingService {
-
+public class SHA256TokenEncoder implements TokenEncoder {
   private static final String ALGORITHM = "SHA-256";
 
-  public String hash(String input) {
+  public String encode(String input) {
     try {
       MessageDigest md = MessageDigest.getInstance(ALGORITHM);
       byte[] digest = md.digest(input.getBytes(StandardCharsets.UTF_8));
@@ -22,7 +19,7 @@ public class HashingService {
   }
 
   public boolean matches(String rawInput, String storedHash) {
-    String computed = hash(rawInput);
+    String computed = encode(rawInput);
 
     return MessageDigest.isEqual(
         computed.getBytes(StandardCharsets.UTF_8), storedHash.getBytes(StandardCharsets.UTF_8));

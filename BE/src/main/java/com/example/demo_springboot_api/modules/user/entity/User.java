@@ -94,15 +94,15 @@ public class User {
     return createdAt;
   }
 
-  public void setCreatedat(Date createdAt) {
+  public void setCreatedAt(Date createdAt) {
     this.createdAt = createdAt;
   }
 
-  public Date getUpdatedat() {
+  public Date getUpdatedAt() {
     return updatedAt;
   }
 
-  public void setUpdatedat(Date updatedAt) {
+  public void setUpdatedAt(Date updatedAt) {
     this.updatedAt = updatedAt;
   }
 }
