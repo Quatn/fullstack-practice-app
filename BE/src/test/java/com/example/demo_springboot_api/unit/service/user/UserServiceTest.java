@@ -35,7 +35,7 @@ class UserServiceTest {
 
   /*
   private Boolean mockMatches(String rawInput, String encodedString) {
-    // Uses SHA256TokenEncoder because it's faster and should be secure enough for testing purpose
+    // Uses SHA256TokenEncoder because it's faster and should be secure for testing purpose
     TokenEncoder encoder = new SHA256TokenEncoder();
     return encoder.matches(rawInput, encodedString);
   }

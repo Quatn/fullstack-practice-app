@@ -2,8 +2,6 @@ package com.example.demo_springboot_api.modules.auth.dto;
 
 import com.example.demo_springboot_api.common.dto.BaseResponse;
 
-record LoginResponseData(UserState userState) {}
-
 public class LoginResponse extends BaseResponse<LoginResponseData, String> {
   public LoginResponse(boolean success, String message, LoginResponseData data, String error) {
     super(success, message, data, error);

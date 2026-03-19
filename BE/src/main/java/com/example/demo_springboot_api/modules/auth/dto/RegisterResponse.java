@@ -2,8 +2,6 @@ package com.example.demo_springboot_api.modules.auth.dto;
 
 import com.example.demo_springboot_api.common.dto.BaseResponse;
 
-record RegisterResponseData(UserState userState) {}
-
 public class RegisterResponse extends BaseResponse<RegisterResponseData, String> {
   public RegisterResponse(
       boolean success, String message, RegisterResponseData data, String error) {
