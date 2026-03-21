@@ -54,6 +54,7 @@ hibernate {
 
 tasks.named('test') {
 	useJUnitPlatform()
+	systemProperty "spring.profiles.active", "test"
 }
 
 def generated = "$buildDir/generated/sources/annotationProcessor/java/main"
