@@ -88,7 +88,7 @@ public class AuthController {
 
     AuthResponseDataBundle bundle = addAuthSessionAndCreateCookie(user);
 
-    return ResponseEntity.status(HttpStatus.OK)
+    return ResponseEntity.status(HttpStatus.CREATED)
         .header(HttpHeaders.SET_COOKIE, bundle.cookie().toString())
         .body(RegisterResponse.success("Register successfully", bundle.userState()));
   }

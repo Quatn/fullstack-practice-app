@@ -70,7 +70,7 @@ class AuthControllerTest extends BaseControllerTest {
   @WithMockUser(
       username = "admin",
       roles = {"ADMIN"})
-  void login_shouldReturnResponseEntityLoginResponse() throws Exception {
+  void login_shouldReturnResponseEntityLoginResponse_whenSuccessful() throws Exception {
     User user = getMockUser();
     String loginKey = user.getCode();
     String password = user.getPassword();

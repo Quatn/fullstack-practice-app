@@ -4,6 +4,7 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import com.example.demo_springboot_api.modules.auth.constant.ModuleConstants;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -13,22 +14,28 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 
 @SpringBootTest
 @Testcontainers
-class UserIntegrationTest extends BaseIntegrationTest {
+class AuthIntegrationTest extends BaseIntegrationTest {
 
   @Autowired private MockMvc mockMvc;
 
   @Test
-  void shouldCreateUser() throws Exception {
+  void register_shouldCreateUserAndReturnResponseEntityRegisterResponse_whenSuccessful()
+      throws Exception {
     String json =
         """
             {
-              "username": "john",
-              "password": "123456"
+              "code": "john.j.aw",
+              "name": "John",
+              "email": "john@gmail.com",
+              "password": "Klmnop123@hgh"
             }
         """;
 
     mockMvc
-        .perform(post("/api/users").contentType(MediaType.APPLICATION_JSON).content(json))
+        .perform(
+            post(ModuleConstants.BASE_PATH + "/register")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json))
         .andExpect(status().isCreated());
   }
 }
