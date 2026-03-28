@@ -3,9 +3,9 @@ package com.example.demo_springboot_api.modules.auth.controller;
 import com.example.demo_springboot_api.common.encoder.token.TokenEncoder;
 import com.example.demo_springboot_api.common.errors.InvalidDataException;
 import com.example.demo_springboot_api.modules.auth.constant.ModuleConstants;
-import com.example.demo_springboot_api.modules.auth.dto.LoginRequest;
+import com.example.demo_springboot_api.modules.auth.dto.LoginForm;
 import com.example.demo_springboot_api.modules.auth.dto.LoginResponse;
-import com.example.demo_springboot_api.modules.auth.dto.RegisterRequest;
+import com.example.demo_springboot_api.modules.auth.dto.RegisterForm;
 import com.example.demo_springboot_api.modules.auth.dto.RegisterResponse;
 import com.example.demo_springboot_api.modules.auth.dto.UserState;
 import com.example.demo_springboot_api.modules.auth.service.AuthService;
@@ -53,7 +53,7 @@ public class AuthController {
   @Autowired private TokenEncoder tokenEncoder;
 
   @PostMapping(path = "/login")
-  public @ResponseBody ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginForm) {
+  public @ResponseBody ResponseEntity<LoginResponse> login(@RequestBody LoginForm loginForm) {
     User user = authService.login(loginForm.loginKey(), loginForm.password());
     if (encoder.matches(loginForm.password(), user.getPassword())) {
       AuthResponseDataBundle bundle = addAuthSessionAndCreateCookie(user);
@@ -69,7 +69,7 @@ public class AuthController {
 
   @PostMapping(path = "/register")
   public @ResponseBody ResponseEntity<RegisterResponse> register(
-      @RequestBody RegisterRequest registerForm) {
+      @RequestBody RegisterForm registerForm) {
 
     if (!authService.checkCodeAvailable(registerForm.code())) {
       throw new InvalidDataException("Unable to register: user code already taken.");

@@ -10,7 +10,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.example.demo_springboot_api.common.encoder.token.TokenEncoder;
 import com.example.demo_springboot_api.modules.auth.constant.ModuleConstants;
 import com.example.demo_springboot_api.modules.auth.controller.AuthController;
-import com.example.demo_springboot_api.modules.auth.dto.LoginRequest;
+import com.example.demo_springboot_api.modules.auth.dto.LoginForm;
 import com.example.demo_springboot_api.modules.auth.dto.LoginResponse;
 import com.example.demo_springboot_api.modules.auth.dto.UserState;
 import com.example.demo_springboot_api.modules.auth.service.AuthService;
@@ -75,7 +75,7 @@ class AuthControllerTest extends BaseControllerTest {
     String loginKey = user.getCode();
     String password = user.getPassword();
 
-    LoginRequest loginForm = new LoginRequest(loginKey, password);
+    LoginForm loginForm = new LoginForm(loginKey, password);
 
     // Encode password because the service will return the password that's saved on the database,
     // which is encoded.
