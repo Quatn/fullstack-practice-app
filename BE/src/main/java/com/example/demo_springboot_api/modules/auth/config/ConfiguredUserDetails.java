@@ -1,4 +1,4 @@
-package com.example.demo_springboot_api.modules.auth.service;
+package com.example.demo_springboot_api.modules.auth.config;
 
 import com.example.demo_springboot_api.modules.user.entity.User;
 import java.util.ArrayList;

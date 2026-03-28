@@ -1,5 +1,6 @@
 package com.example.demo_springboot_api.modules.auth.service;
 
+import com.example.demo_springboot_api.modules.auth.config.ConfiguredUserDetails;
 import com.example.demo_springboot_api.modules.user.entity.User;
 import com.example.demo_springboot_api.modules.user.repository.UserRepository;
 import java.util.Optional;
