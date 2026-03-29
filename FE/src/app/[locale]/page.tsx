@@ -1,5 +1,6 @@
 import WelcomeBox from "@/components/home/WelcomeBox";
-import { Box, Flex, Text } from "@chakra-ui/react";
+import { FormattedText } from "@/lib/intl/FormattedText";
+import { Box, Flex, SkeletonText } from "@chakra-ui/react";
 
 export default function Home() {
   return (
@@ -9,12 +10,7 @@ export default function Home() {
       */}
       <main style={{ flexGrow: 1 }}>
         <Box m={5} p={2} rounded={"sm"}>
-          <Text fontWeight={"semibold"} colorPalette={"black"} fontSize={"2rem"}>
-            XC Managment system
-          </Text>
-          <Text>
-            Welcome to XC managment system
-          </Text>
+          <FormattedText id={"app.title"} placeholder={<SkeletonText />} fontWeight={"semibold"} colorPalette={"black"} fontSize={"2rem"} />
           <WelcomeBox />
         </Box>
       </main>

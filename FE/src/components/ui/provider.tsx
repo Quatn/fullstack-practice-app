@@ -2,11 +2,18 @@
 
 import { ChakraProvider, defaultSystem } from "@chakra-ui/react";
 import { ColorModeProvider, type ColorModeProviderProps } from "./color-mode";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import store from "@/service/store";
 import { hydrate as hydrateUserState, setAccessToken, setCredentials, setRefreshingToken } from "@/service/features/authSlice";
 import { Provider as ReduxStoreProvider } from "react-redux";
 import { useTokenRefreshQuery } from "@/service/api/authApiSlice";
+import { importMessages, IntlProvider, IntlProviderProps, LocaleMessages } from "@/lib/intl/intl";
+
+export type ProviderProps = {
+  intlProviderProps: Omit<IntlProviderProps, 'messages'>,
+  colorModeProviderProps?: ColorModeProviderProps,
+  children: React.ReactNode,
+}
 
 function ReduxHydrator({ children }: { children: React.ReactNode }) {
   const {
@@ -32,14 +39,28 @@ function ReduxHydrator({ children }: { children: React.ReactNode }) {
   return <>{children}</>;
 }
 
-export function Provider(props: ColorModeProviderProps) {
+export function Provider(props: ProviderProps) {
+  const [messages, setMessages] = useState<LocaleMessages | Record<string, string>>({})
+
+  useEffect(() => {
+    importMessages(props.intlProviderProps.locale).then((res) => {
+      if (res != null) {
+        setMessages(res)
+      }
+    })
+  }, [props.intlProviderProps.locale])
+
   return (
-    <ReduxStoreProvider store={store}>
-      <ReduxHydrator>
-        <ChakraProvider value={defaultSystem}>
-          <ColorModeProvider {...props} />
-        </ChakraProvider>
-      </ReduxHydrator>
-    </ReduxStoreProvider>
+    <IntlProvider {...props.intlProviderProps} messages={messages}>
+      <ReduxStoreProvider store={store}>
+        <ReduxHydrator>
+          <ChakraProvider value={defaultSystem}>
+            <ColorModeProvider {...props.colorModeProviderProps}>
+              {props.children}
+            </ColorModeProvider>
+          </ChakraProvider>
+        </ReduxHydrator>
+      </ReduxStoreProvider>
+    </IntlProvider>
   );
 }

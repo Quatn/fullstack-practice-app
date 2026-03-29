@@ -1,5 +1,5 @@
 "use client"
-import { Box, Text, Link as ChakraLink, Stack } from "@chakra-ui/react";
+import { Box, Text, Link as ChakraLink, Stack, SkeletonText } from "@chakra-ui/react";
 import AuthenticatedContent from "../layout/AuthenticatedContent";
 import { UserState } from "@/types/UserState";
 import { useAppSelector } from "@/service/hooks";
@@ -10,6 +10,7 @@ import { useHealthCheckQuery } from "@/service/api/testApiSlice";
 import DataLoading from "../common/DataLoading";
 import DataFetchError from "../common/DataFetchError";
 import { tryGetApiErrorMsg } from "@/utils/tryGetApiErrorMsg";
+import { FormattedText } from "@/lib/intl/FormattedText";
 
 const adminPrivs: AnyAccessPrivileges[] = ["system-admin", "system-read", "system-readWrite"]
 
@@ -54,7 +55,7 @@ export default function WelcomeBox() {
       }
     >
       <Box>
-        <Text>You are logged in as user {userState?.name}</Text>
+        <FormattedText id={"welcomeMessage"} values={{ name: userState?.name }} placeholder={<SkeletonText noOfLines={1} />} />
         {isAdmin && <Text colorPalette={"red"} color={"colorPalette.info"}>You have admin privileges</Text>}
         <Stack mt={5}>
           <Link href={"/dashboard"}>

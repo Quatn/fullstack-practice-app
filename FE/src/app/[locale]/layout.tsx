@@ -29,9 +29,9 @@ export default async function RootLayout({
   const { locale } = await params;
 
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang={locale} suppressHydrationWarning>
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
-        <Provider>{children}</Provider>
+        <Provider intlProviderProps={{ locale }}>{children}</Provider>
       </body>
     </html>
   );
