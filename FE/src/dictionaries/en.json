@@ -1,4 +1,13 @@
 {
   "app.title": "Full-stack practice app",
-  "welcomeMessage": "Welcome, {name}"
+  "welcomeMessage": "Welcome, {name}",
+
+  "errors.common.ERR_INTERNAL_SERVER_ERROR": "",
+  "errors.auth.login.ERR_USER_NOT_FOUND": "",
+  "errors.auth.login.ERR_INVALID_CREDENTIAL": "",
+  "errors.auth.login.ERR_WRONG_CREDENTIAL": "",
+  "errors.user.ERR_USER_NOT_FOUND": "",
+  "errors.auth.register.ERR_EMAIL_TAKEN": "",
+  "errors.auth.register.ERR_INVALID_USER_CODE": "",
+  "errors.auth.register.ERR_INVALID_USER_NAME": ""
 }

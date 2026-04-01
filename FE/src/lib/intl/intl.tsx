@@ -4,8 +4,13 @@ import * as React from 'react'
 import { IntlProvider as IntlProvider_ } from 'react-intl'
 
 // "import type" ensures en messages aren't bundled by default
-import type sourceOfTruth from '@/dictionaries/en.json'
+import sourceOfTruth from '@/dictionaries/en.json'
+// ensure that all errors defined in the generated ErrorCode is defined by the dictionaries
+sourceOfTruth satisfies Record<ErrorCode, string>
+
 import { config } from '@/config/config'
+import { ErrorCode } from '@/generated/ErrorCode'
+
 
 export type LocaleMessages = typeof sourceOfTruth
 export type LocaleKey = keyof LocaleMessages

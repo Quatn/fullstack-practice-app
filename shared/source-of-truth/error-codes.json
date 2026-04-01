@@ -1,0 +1,16 @@
+{
+  "common": ["ERR_INTERNAL_SERVER_ERROR"],
+  "auth": {
+    "login": [
+      "ERR_USER_NOT_FOUND",
+      "ERR_INVALID_CREDENTIAL",
+      "ERR_WRONG_CREDENTIAL"
+    ],
+    "register": [
+      "ERR_INVALID_USER_CODE",
+      "ERR_INVALID_USER_NAME",
+      "ERR_EMAIL_TAKEN"
+    ]
+  },
+  "user": ["ERR_USER_NOT_FOUND"]
+}
