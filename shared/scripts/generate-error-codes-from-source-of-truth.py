@@ -82,37 +82,46 @@ def generate_ts_type(error_codes):
 # ======================
 
 
-def generate_enum(name, values, level):
-    lines = [f"public enum {name} {{"]
+def collect_errors(data, prefix=""):
+    results = []
 
-    for i, v in enumerate(values):
-        comma = "," if i < len(values) - 1 else ";"
-        lines.append(f"  {v}{comma}")
+    if isinstance(data, list):
+        for item in data:
+            enum_name = f"{prefix}_{item}".upper() if prefix else item.upper()
+            results.append((enum_name, item))
 
-    lines.append("}")
-    return indent("\n".join(lines), level)
+    elif isinstance(data, dict):
+        for key, value in data.items():
+            new_prefix = f"{prefix}_{key}".upper() if prefix else key.upper()
+            results.extend(collect_errors(value, new_prefix))
+
+    return results
 
 
-def generate_class(name, body, level):
-    lines = [f"public class {name} {{", body, "}"]
-    return indent("\n".join(lines), level)
+def generate_enum(errors):
+    seen = set()
+    enum_entries = []
 
+    for enum_name, original in errors:
+        # Avoid duplicates
+        if enum_name in seen:
+            continue
+        seen.add(enum_name)
 
-def walk_java(node, level=1):
-    parts = []
+        entry = f"""  {enum_name} {{
+    @Override
+    public String toString() {{
+      return "{original}";
+    }}
+  }}"""
+        enum_entries.append(entry)
 
-    for key, value in node.items():
-        if isinstance(value, list):
-            parts.append(generate_enum(key, value, level))
-        elif isinstance(value, dict):
-            inner = walk_java(value, level + 1)
-            parts.append(generate_class(key, inner, level))
-
-    return "\n\n".join(parts)
+    return ",\n\n".join(enum_entries)
 
 
 def generate_java(data):
-    return walk_java(data)
+    errors = collect_errors(data)
+    return generate_enum(errors)
 
 
 # ======================

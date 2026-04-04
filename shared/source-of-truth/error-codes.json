@@ -1,6 +1,12 @@
 {
-  "common": ["ERR_INTERNAL_SERVER_ERROR"],
+  "common": [
+    "ERR_INTERNAL_SERVER_ERROR",
+    "ERR_DATA_NOT_FOUND",
+    "ERR_INVALID_DATA",
+    "ERR_METHOD_ARGUMENT_NOT_VALID"
+  ],
   "auth": {
+    "token": ["ERR_INVALID_TOKEN", "ERR_MALFORMED_TOKEN"],
     "login": [
       "ERR_USER_NOT_FOUND",
       "ERR_INVALID_CREDENTIAL",

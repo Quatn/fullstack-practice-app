@@ -14,6 +14,6 @@
 
 package com.example.demo_springboot_api.generated;
 
-public class ErrorCode {
+public enum ErrorCode {
 ${GENERATED_VALUES}
 }
