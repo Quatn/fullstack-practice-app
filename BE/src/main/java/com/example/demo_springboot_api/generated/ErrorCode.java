@@ -14,26 +14,95 @@
 
 package com.example.demo_springboot_api.generated;
 
-public class ErrorCode {
-  public enum common {
-    ERR_INTERNAL_SERVER_ERROR;
-  }
+public enum ErrorCode {
+  COMMON_ERR_INTERNAL_SERVER_ERROR {
+    @Override
+    public String toString() {
+      return "ERR_INTERNAL_SERVER_ERROR";
+    }
+  },
 
-  public class auth {
-      public enum login {
-        ERR_USER_NOT_FOUND,
-        ERR_INVALID_CREDENTIAL,
-        ERR_WRONG_CREDENTIAL;
-      }
+  COMMON_ERR_DATA_NOT_FOUND {
+    @Override
+    public String toString() {
+      return "ERR_DATA_NOT_FOUND";
+    }
+  },
 
-      public enum register {
-        ERR_INVALID_USER_CODE,
-        ERR_INVALID_USER_NAME,
-        ERR_EMAIL_TAKEN;
-      }
-  }
+  COMMON_ERR_INVALID_DATA {
+    @Override
+    public String toString() {
+      return "ERR_INVALID_DATA";
+    }
+  },
 
-  public enum user {
-    ERR_USER_NOT_FOUND;
+  COMMON_ERR_METHOD_ARGUMENT_NOT_VALID {
+    @Override
+    public String toString() {
+      return "ERR_METHOD_ARGUMENT_NOT_VALID";
+    }
+  },
+
+  AUTH_TOKEN_ERR_INVALID_TOKEN {
+    @Override
+    public String toString() {
+      return "ERR_INVALID_TOKEN";
+    }
+  },
+
+  AUTH_TOKEN_ERR_MALFORMED_TOKEN {
+    @Override
+    public String toString() {
+      return "ERR_MALFORMED_TOKEN";
+    }
+  },
+
+  AUTH_LOGIN_ERR_USER_NOT_FOUND {
+    @Override
+    public String toString() {
+      return "ERR_USER_NOT_FOUND";
+    }
+  },
+
+  AUTH_LOGIN_ERR_INVALID_CREDENTIAL {
+    @Override
+    public String toString() {
+      return "ERR_INVALID_CREDENTIAL";
+    }
+  },
+
+  AUTH_LOGIN_ERR_WRONG_CREDENTIAL {
+    @Override
+    public String toString() {
+      return "ERR_WRONG_CREDENTIAL";
+    }
+  },
+
+  AUTH_REGISTER_ERR_INVALID_USER_CODE {
+    @Override
+    public String toString() {
+      return "ERR_INVALID_USER_CODE";
+    }
+  },
+
+  AUTH_REGISTER_ERR_INVALID_USER_NAME {
+    @Override
+    public String toString() {
+      return "ERR_INVALID_USER_NAME";
+    }
+  },
+
+  AUTH_REGISTER_ERR_EMAIL_TAKEN {
+    @Override
+    public String toString() {
+      return "ERR_EMAIL_TAKEN";
+    }
+  },
+
+  USER_ERR_USER_NOT_FOUND {
+    @Override
+    public String toString() {
+      return "ERR_USER_NOT_FOUND";
+    }
   }
 }

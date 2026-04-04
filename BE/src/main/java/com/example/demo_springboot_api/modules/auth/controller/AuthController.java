@@ -2,11 +2,15 @@ package com.example.demo_springboot_api.modules.auth.controller;
 
 import com.example.demo_springboot_api.common.encoder.token.TokenEncoder;
 import com.example.demo_springboot_api.common.errors.InvalidDataException;
+import com.example.demo_springboot_api.common.utils.ResponseHelper;
+import com.example.demo_springboot_api.generated.ErrorCode;
 import com.example.demo_springboot_api.modules.auth.constant.ModuleConstants;
 import com.example.demo_springboot_api.modules.auth.dto.LoginForm;
 import com.example.demo_springboot_api.modules.auth.dto.LoginResponse;
+import com.example.demo_springboot_api.modules.auth.dto.LoginResponseData;
 import com.example.demo_springboot_api.modules.auth.dto.RegisterForm;
 import com.example.demo_springboot_api.modules.auth.dto.RegisterResponse;
+import com.example.demo_springboot_api.modules.auth.dto.RegisterResponseData;
 import com.example.demo_springboot_api.modules.auth.dto.UserState;
 import com.example.demo_springboot_api.modules.auth.service.AuthService;
 import com.example.demo_springboot_api.modules.auth.service.AuthSessionService;
@@ -60,11 +64,19 @@ public class AuthController {
 
       return ResponseEntity.status(HttpStatus.OK)
           .header(HttpHeaders.SET_COOKIE, bundle.cookie().toString())
-          .body(LoginResponse.success("Login successfully", bundle.userState()));
+          .body(
+              ResponseHelper.success(
+                  "Login successfully",
+                  new LoginResponseData(bundle.userState()),
+                  LoginResponse::new));
     }
 
     return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-        .body(LoginResponse.error("Login unsuccessfully", "Wrong email or password"));
+        .body(
+            ResponseHelper.error(
+                "Login unsuccessfully: Wrong email or password",
+                ErrorCode.AUTH_LOGIN_ERR_WRONG_CREDENTIAL,
+                LoginResponse::new));
   }
 
   @PostMapping(path = "/register")
@@ -90,7 +102,11 @@ public class AuthController {
 
     return ResponseEntity.status(HttpStatus.CREATED)
         .header(HttpHeaders.SET_COOKIE, bundle.cookie().toString())
-        .body(RegisterResponse.success("Register successfully", bundle.userState()));
+        .body(
+            ResponseHelper.success(
+                "Register successfully",
+                new RegisterResponseData(bundle.userState()),
+                RegisterResponse::new));
   }
 
   private AuthResponseDataBundle addAuthSessionAndCreateCookie(User user) {

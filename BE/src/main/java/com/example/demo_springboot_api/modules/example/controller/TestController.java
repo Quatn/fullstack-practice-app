@@ -1,6 +1,7 @@
 package com.example.demo_springboot_api.modules.example.controller;
 
-import com.example.demo_springboot_api.common.dto.BaseResponse;
+import com.example.demo_springboot_api.common.dto.ApiResponse;
+import com.example.demo_springboot_api.common.utils.ResponseHelper;
 import com.example.demo_springboot_api.modules.example.constant.*;
 import com.example.demo_springboot_api.modules.example.entity.Project;
 import com.example.demo_springboot_api.modules.example.repository.ProjectRepository;
@@ -33,7 +34,7 @@ public class TestController {
   }
 
   @GetMapping(path = "/getall")
-  public @ResponseBody ResponseEntity<BaseResponse<String, String>> getAllUsers() {
+  public @ResponseBody ResponseEntity<ApiResponse<String>> getAllUsers() {
     String out = "";
     Iterator<Project> users = projectRepository.findAll().iterator();
     while (users.hasNext()) {
@@ -45,6 +46,6 @@ public class TestController {
     }
 
     return ResponseEntity.status(HttpStatus.OK)
-        .body(BaseResponse.success("Get all successfully", out));
+        .body(ResponseHelper.success("Get all successfully", out, ApiResponse::new));
   }
 }

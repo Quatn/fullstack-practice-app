@@ -1,26 +1,19 @@
 package com.example.demo_springboot_api.common.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import org.jspecify.annotations.Nullable;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class BaseResponse<TData, TError> {
+public class BaseResponse<TData extends Object, TError extends Object> {
   public boolean success;
   public String message;
-  public TData data;
-  public TError error = null;
+  @Nullable public TData data;
+  @Nullable public TError error;
 
   public BaseResponse(boolean success, String message, TData data, TError error) {
     this.success = success;
     this.message = message;
     this.data = data;
     this.error = error;
-  }
-
-  public static <TData, TError> BaseResponse<TData, TError> success(String message, TData data) {
-    return new BaseResponse<TData, TError>(true, message, data, null);
-  }
-
-  public static <TData, TError> BaseResponse<TData, TError> error(String message, TError error) {
-    return new BaseResponse<TData, TError>(false, message, null, error);
   }
 }

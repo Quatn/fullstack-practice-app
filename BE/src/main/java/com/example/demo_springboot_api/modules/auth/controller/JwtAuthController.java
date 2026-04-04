@@ -3,9 +3,11 @@ package com.example.demo_springboot_api.modules.auth.controller;
 import com.example.demo_springboot_api.common.encoder.token.TokenEncoder;
 import com.example.demo_springboot_api.common.errors.ExpiredAuthSessionException;
 import com.example.demo_springboot_api.common.errors.InvalidAuthSessionException;
+import com.example.demo_springboot_api.common.utils.ResponseHelper;
 import com.example.demo_springboot_api.modules.auth.config.ConfiguredUserDetails;
 import com.example.demo_springboot_api.modules.auth.constant.ModuleConstants;
 import com.example.demo_springboot_api.modules.auth.dto.TokenRefreshResponse;
+import com.example.demo_springboot_api.modules.auth.dto.TokenRefreshResponseData;
 import com.example.demo_springboot_api.modules.auth.dto.UserState;
 import com.example.demo_springboot_api.modules.auth.entity.AuthSession;
 import com.example.demo_springboot_api.modules.auth.service.AuthSessionService;
@@ -57,6 +59,10 @@ public class JwtAuthController {
     UserState userState = new UserState(user);
 
     return ResponseEntity.status(HttpStatus.OK)
-        .body(TokenRefreshResponse.success("Authenticated", userState, accessToken));
+        .body(
+            ResponseHelper.success(
+                "Authenticated",
+                new TokenRefreshResponseData(userState, accessToken),
+                TokenRefreshResponse::new));
   }
 }

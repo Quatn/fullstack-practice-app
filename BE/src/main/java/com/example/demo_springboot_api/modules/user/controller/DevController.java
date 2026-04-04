@@ -1,7 +1,8 @@
 package com.example.demo_springboot_api.modules.user.controller;
 
-import com.example.demo_springboot_api.common.dto.BaseResponse;
+import com.example.demo_springboot_api.common.dto.ApiResponse;
 import com.example.demo_springboot_api.common.encoder.token.TokenEncoder;
+import com.example.demo_springboot_api.common.utils.ResponseHelper;
 import com.example.demo_springboot_api.modules.user.constant.ModuleConstants;
 import com.example.demo_springboot_api.modules.user.entity.User;
 import com.example.demo_springboot_api.modules.user.repository.UserRepository;
@@ -50,7 +51,7 @@ public class DevController {
   }
 
   @PostMapping(path = "/getall")
-  public @ResponseBody ResponseEntity<BaseResponse<String, String>> getAllUsers() {
+  public @ResponseBody ResponseEntity<ApiResponse<String>> getAllUsers() {
     String out = "";
     Iterator<User> users = userRepository.findAll().iterator();
     while (users.hasNext()) {
@@ -62,24 +63,23 @@ public class DevController {
     }
 
     return ResponseEntity.status(HttpStatus.OK)
-        .body(BaseResponse.success("Get all successfully", out));
+        .body(ResponseHelper.success("Get all successfully", out, ApiResponse::new));
   }
 
   @GetMapping(path = "/test-encode")
-  public @ResponseBody ResponseEntity<BaseResponse<String, String>> testPasswordEncode(
+  public @ResponseBody ResponseEntity<ApiResponse<String>> testPasswordEncode(
       @RequestParam String input) {
     String out = encoder.encode(input);
 
     return ResponseEntity.status(HttpStatus.OK)
-        .body(BaseResponse.success("Test encode successfully", out));
+        .body(ResponseHelper.success("Test encode successfully", out, ApiResponse::new));
   }
 
   @GetMapping(path = "/test-hash")
-  public @ResponseBody ResponseEntity<BaseResponse<String, String>> testHash(
-      @RequestParam String input) {
+  public @ResponseBody ResponseEntity<ApiResponse<String>> testHash(@RequestParam String input) {
     String out = tokenEncoder.encode(input);
 
     return ResponseEntity.status(HttpStatus.OK)
-        .body(BaseResponse.success("Test hash successfully", out));
+        .body(ResponseHelper.success("Test hash successfully", out, ApiResponse::new));
   }
 }
