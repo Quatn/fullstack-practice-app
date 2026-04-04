@@ -1,13 +1,31 @@
 {
-  "app.title": "Full-stack practice app",
-  "welcomeMessage": "Xin chào, {name}",
+  "words.Or": "Hoặc",
+  "words.or": "hoặc",
 
-  "errors.common.ERR_INTERNAL_SERVER_ERROR": "",
-  "errors.auth.login.ERR_USER_NOT_FOUND": "",
-  "errors.auth.login.ERR_INVALID_CREDENTIAL": "",
-  "errors.auth.login.ERR_WRONG_CREDENTIAL": "",
-  "errors.user.ERR_USER_NOT_FOUND": "",
+  "app.title": "Full-stack practice app",
+  "app.welcomeMessage": "Xin chào, {name}",
+
+  "auth.login.title": "Đăng nhập",
+  "auth.login.form.label.loginKey": "Mã tài khoản",
+  "auth.login.form.label.password": "Mật khẩu",
+  "auth.login.form.description": "một tài khoản mới",
+  "auth.login.form.link.register": "đăng kí",
+  "auth.login.result.success": "Đăng nhập thành công",
+  "auth.login.result.success.info": "Đăng nhập thành công bằng tài khoản {userInfo}",
+  "auth.login.result.failed": "Đăng nhập thất bại",
+  "auth.login.result.failed.defaultError": "Có lỗi xảy ra trong quá trình đăng nhập",
+
+  "errors.auth.login.ERR_INVALID_CREDENTIAL": "Tài khoản hoặc mật khẩu không hợp lệ",
+  "errors.auth.login.ERR_USER_NOT_FOUND": "Tài khoản không tồn tại",
+  "errors.auth.login.ERR_WRONG_CREDENTIAL": "Tài khoản hoặc mật khẩu không đúng",
   "errors.auth.register.ERR_EMAIL_TAKEN": "",
   "errors.auth.register.ERR_INVALID_USER_CODE": "",
-  "errors.auth.register.ERR_INVALID_USER_NAME": ""
+  "errors.auth.register.ERR_INVALID_USER_NAME": "",
+  "errors.auth.token.ERR_INVALID_TOKEN": "",
+  "errors.auth.token.ERR_MALFORMED_TOKEN": "",
+  "errors.common.ERR_DATA_NOT_FOUND": "",
+  "errors.common.ERR_INTERNAL_SERVER_ERROR": "",
+  "errors.common.ERR_INVALID_DATA": "",
+  "errors.common.ERR_METHOD_ARGUMENT_NOT_VALID": "",
+  "errors.user.ERR_USER_NOT_FOUND": ""
 }

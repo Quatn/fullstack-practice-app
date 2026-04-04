@@ -11,6 +11,7 @@ import DataLoading from "../common/DataLoading";
 import DataFetchError from "../common/DataFetchError";
 import { tryGetApiErrorMsg } from "@/utils/tryGetApiErrorMsg";
 import { FormattedText } from "@/lib/intl/FormattedText";
+import { LocaleKey } from "@/lib/intl/intl";
 
 const adminPrivs: AnyAccessPrivileges[] = ["system-admin", "system-read", "system-readWrite"]
 
@@ -55,7 +56,7 @@ export default function WelcomeBox() {
       }
     >
       <Box>
-        <FormattedText id={"welcomeMessage"} values={{ name: userState?.name }} placeholder={<SkeletonText noOfLines={1} />} />
+        <FormattedText id={"app.welcomeMessage"} values={{ name: userState?.name }} placeholder={<SkeletonText noOfLines={1} />} />
         {isAdmin && <Text colorPalette={"red"} color={"colorPalette.info"}>You have admin privileges</Text>}
         <Stack mt={5}>
           <Link href={"/dashboard"}>

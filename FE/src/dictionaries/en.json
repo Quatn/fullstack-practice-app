@@ -1,13 +1,31 @@
 {
-  "app.title": "Full-stack practice app",
-  "welcomeMessage": "Welcome, {name}",
+  "words.Or": "Or",
+  "words.or": "or",
 
-  "errors.common.ERR_INTERNAL_SERVER_ERROR": "",
-  "errors.auth.login.ERR_USER_NOT_FOUND": "",
-  "errors.auth.login.ERR_INVALID_CREDENTIAL": "",
-  "errors.auth.login.ERR_WRONG_CREDENTIAL": "",
-  "errors.user.ERR_USER_NOT_FOUND": "",
+  "app.title": "Full-stack practice app",
+  "app.welcomeMessage": "Welcome, {name}",
+
+  "auth.login.title": "Login",
+  "auth.login.form.label.loginKey": "Account code",
+  "auth.login.form.label.password": "Password",
+  "auth.login.form.link.register": "register",
+  "auth.login.form.description": "a new account",
+  "auth.login.result.success": "Successfully logged in",
+  "auth.login.result.success.info": "Successfully logged in as {userInfo}",
+  "auth.login.result.failed": "Failed to login",
+  "auth.login.result.failed.defaultError": "An error happened",
+
+  "errors.auth.login.ERR_INVALID_CREDENTIAL": "Login code or password is invalid",
+  "errors.auth.login.ERR_USER_NOT_FOUND": "Account not found",
+  "errors.auth.login.ERR_WRONG_CREDENTIAL": "Login code or password is incorrect",
   "errors.auth.register.ERR_EMAIL_TAKEN": "",
   "errors.auth.register.ERR_INVALID_USER_CODE": "",
-  "errors.auth.register.ERR_INVALID_USER_NAME": ""
+  "errors.auth.register.ERR_INVALID_USER_NAME": "",
+  "errors.auth.token.ERR_INVALID_TOKEN": "",
+  "errors.auth.token.ERR_MALFORMED_TOKEN": "",
+  "errors.common.ERR_DATA_NOT_FOUND": "",
+  "errors.common.ERR_INTERNAL_SERVER_ERROR": "",
+  "errors.common.ERR_INVALID_DATA": "",
+  "errors.common.ERR_METHOD_ARGUMENT_NOT_VALID": "",
+  "errors.user.ERR_USER_NOT_FOUND": ""
 }

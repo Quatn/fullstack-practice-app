@@ -19,6 +19,11 @@ export type ErrorCode =
   | "errors.auth.register.ERR_EMAIL_TAKEN"
   | "errors.auth.register.ERR_INVALID_USER_CODE"
   | "errors.auth.register.ERR_INVALID_USER_NAME"
+  | "errors.auth.token.ERR_INVALID_TOKEN"
+  | "errors.auth.token.ERR_MALFORMED_TOKEN"
+  | "errors.common.ERR_DATA_NOT_FOUND"
   | "errors.common.ERR_INTERNAL_SERVER_ERROR"
+  | "errors.common.ERR_INVALID_DATA"
+  | "errors.common.ERR_METHOD_ARGUMENT_NOT_VALID"
   | "errors.user.ERR_USER_NOT_FOUND"
 

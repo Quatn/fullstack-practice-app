@@ -7,7 +7,8 @@ import store from "@/service/store";
 import { hydrate as hydrateUserState, setAccessToken, setCredentials, setRefreshingToken } from "@/service/features/authSlice";
 import { Provider as ReduxStoreProvider } from "react-redux";
 import { useTokenRefreshQuery } from "@/service/api/authApiSlice";
-import { importMessages, IntlProvider, IntlProviderProps, LocaleMessages } from "@/lib/intl/intl";
+import { IntlProvider, IntlProviderProps, LocaleMessages } from "@/lib/intl/intl";
+import { importMessages } from "@/lib/intl/importMessages";
 
 export type ProviderProps = {
   intlProviderProps: Omit<IntlProviderProps, 'messages'>,

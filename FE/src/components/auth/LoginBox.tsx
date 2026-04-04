@@ -22,6 +22,9 @@ import {
   Input,
   Link as ChakraLink,
   Stack,
+  SkeletonText,
+  Badge,
+  Skeleton,
 } from "@chakra-ui/react";
 import check from "check-types";
 import Link from "next/link";
@@ -29,6 +32,20 @@ import { useRouter } from "next/navigation";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { ColorModeButton } from "../ui/color-mode";
 import { config } from "@/config/config";
+import { useFormatMessage } from "@/lib/intl/useFormatMessage";
+import { tryGetApiErrorCode } from "@/utils/tryGetApiErrorCode";
+import { LocaleKey } from "@/lib/intl/intl";
+import { FormattedText } from "@/lib/intl/FormattedText";
+
+const FText = ({ id }: { id: LocaleKey }) => {
+  return (
+    <FormattedText
+      as={"span"}
+      id={id}
+      placeholder={<Skeleton as={"span"} mx={1} height={"1rem"} width={"5rem"} display={"inline-block"} />}
+    />
+  )
+}
 
 type LoginFormFields = {
   loginKey: string
@@ -44,6 +61,7 @@ export default function LoginBox() {
     formState: { errors },
     trigger,
   } = useForm<LoginFormFields>()
+  const t = useFormatMessage();
 
   const router = useRouter();
 
@@ -59,30 +77,41 @@ export default function LoginBox() {
       if (!check.nonEmptyObject(userData)) {
         throw "Invalid login response";
       }
-      /*
-      const accessToken = response.data?.accessToken;
-      dispatch(setCredentials(userData));
-      */
       toaster.create({
-        description: `Đăng nhập thành công bằng tài khoản người dùng ${userData?.name}`,
+        title: (check.string(userData?.name)) ?
+          t("auth.login.result.success.info", { userInfo: userData?.name })
+          : t("auth.login.result.success"),
         type: "success",
       });
       router.push("/");
-    } catch { }
+    } catch (e) {
+      const error = tryGetApiErrorCode(e);
+      toaster.create({
+        title: t("auth.login.result.failed"),
+        description: t(`errors.auth.login.${error}` as unknown as LocaleKey,
+          {},
+          t("auth.login.result.failed.defaultError")),
+        type: "error",
+      });
+    }
   }
 
   return (
     <CardRoot w="lg">
       <CardHeader>
-        <CardTitle>Đăng nhập</CardTitle>
+        <CardTitle>
+          <FText id="auth.login.title" />
+        </CardTitle>
         <CardDescription>
-          Or <Link href={"register"}><ChakraLink color={"blue.500"} as="span">register</ChakraLink></Link> a new account
+          <FText id="words.Or" /> <Link href={"register"}><ChakraLink color={"blue.500"} as="span">{
+            <FText id="auth.login.form.link.register" />
+          }</ChakraLink> </Link> <FText id="auth.login.form.description" />
         </CardDescription>
       </CardHeader>
       <CardBody>
         <form onSubmit={handleSubmit(onSubmit)}>
           <Stack gap="4" w="full">
-            <Field label="Mã đăng nhập">
+            <Field label={<FText id="auth.login.form.label.loginKey" />}>
               <Controller
                 name="loginKey"
                 control={control}
@@ -90,7 +119,7 @@ export default function LoginBox() {
                 render={({ field }) => <Input {...field} />}
               />
             </Field>
-            <Field label="Mật khẩu">
+            <Field label={<FText id="auth.login.form.label.password" />}>
               <Controller
                 name="password"
                 control={control}
@@ -102,9 +131,11 @@ export default function LoginBox() {
               <Alert.Root status={"error"}>
                 <Alert.Indicator />
                 <Alert.Content>
-                  <Alert.Title>Failed to login</Alert.Title>
+                  <Alert.Title>{t("auth.login.result.failed")}</Alert.Title>
                   <Alert.Description>
-                    {tryGetApiErrorMsg(logInError)}
+                    {t(`errors.auth.login.${tryGetApiErrorCode(logInError)}` as unknown as LocaleKey,
+                      {},
+                      t("auth.login.result.failed.defaultError"))}
                   </Alert.Description>
                 </Alert.Content>
               </Alert.Root>
