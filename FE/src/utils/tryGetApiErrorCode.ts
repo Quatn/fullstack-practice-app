@@ -3,6 +3,10 @@ import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
 import check from "check-types";
 
 export const tryGetApiErrorCode = (error?: Error | FetchBaseQueryError | SerializedError | unknown) => {
+  if (check.string(error)) {
+    return error;
+  }
+
   if (!check.object(error)) {
     return undefined;
   }

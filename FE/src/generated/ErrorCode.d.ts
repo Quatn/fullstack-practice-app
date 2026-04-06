@@ -19,6 +19,7 @@ export type ErrorCode =
   | "errors.auth.register.ERR_EMAIL_TAKEN"
   | "errors.auth.register.ERR_INVALID_USER_CODE"
   | "errors.auth.register.ERR_INVALID_USER_NAME"
+  | "errors.auth.register.ERR_USER_CODE_TAKEN"
   | "errors.auth.token.ERR_INVALID_TOKEN"
   | "errors.auth.token.ERR_MALFORMED_TOKEN"
   | "errors.common.ERR_DATA_NOT_FOUND"

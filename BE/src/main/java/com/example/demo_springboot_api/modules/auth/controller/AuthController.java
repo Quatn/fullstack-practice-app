@@ -1,7 +1,6 @@
 package com.example.demo_springboot_api.modules.auth.controller;
 
 import com.example.demo_springboot_api.common.encoder.token.TokenEncoder;
-import com.example.demo_springboot_api.common.errors.InvalidDataException;
 import com.example.demo_springboot_api.common.utils.ResponseHelper;
 import com.example.demo_springboot_api.generated.ErrorCode;
 import com.example.demo_springboot_api.modules.auth.constant.ModuleConstants;
@@ -84,11 +83,21 @@ public class AuthController {
       @RequestBody RegisterForm registerForm) {
 
     if (!authService.checkCodeAvailable(registerForm.code())) {
-      throw new InvalidDataException("Unable to register: user code already taken.");
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+          .body(
+              ResponseHelper.error(
+                  "Unable to register: user code already taken",
+                  ErrorCode.AUTH_REGISTER_ERR_USER_CODE_TAKEN,
+                  RegisterResponse::new));
     }
 
     if (!authService.checkEmailAvailable(registerForm.email())) {
-      throw new InvalidDataException("Unable to register: email already taken.");
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+          .body(
+              ResponseHelper.error(
+                  "Unable to register: email already taken",
+                  ErrorCode.AUTH_REGISTER_ERR_EMAIL_TAKEN,
+                  RegisterResponse::new));
     }
 
     User n = new User();

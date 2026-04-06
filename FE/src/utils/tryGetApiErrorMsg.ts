@@ -63,7 +63,11 @@ export const defaultAltHandler = (err: object): string | undefined => {
   return undefined
 }
 
-export const tryGetApiErrorMsg = (error?: Error | FetchBaseQueryError | SerializedError, altHandler?: ((err: object) => string | undefined) | false) => {
+export const tryGetApiErrorMsg = (error?: Error | FetchBaseQueryError | SerializedError | unknown, altHandler?: ((err: object) => string | undefined) | false) => {
+  if (check.string(error)) {
+    return error;
+  }
+
   if (!check.object(error)) {
     return undefined;
   }

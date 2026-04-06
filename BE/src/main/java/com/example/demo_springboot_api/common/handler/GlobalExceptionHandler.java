@@ -54,7 +54,7 @@ public class GlobalExceptionHandler {
 
   @ExceptionHandler(InvalidDataException.class)
   public ResponseEntity<ApiResponse<Object>> handleInvalidData(InvalidDataException ex) {
-    return ResponseEntity.status(HttpStatus.NOT_FOUND)
+    return ResponseEntity.status(HttpStatus.BAD_REQUEST)
         .body(
             ResponseHelper.error(
                 "Invalid data", ErrorCode.COMMON_ERR_INVALID_DATA, ApiResponse::new));

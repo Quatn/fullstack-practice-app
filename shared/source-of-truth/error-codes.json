@@ -15,6 +15,7 @@
     "register": [
       "ERR_INVALID_USER_CODE",
       "ERR_INVALID_USER_NAME",
+      "ERR_USER_CODE_TAKEN",
       "ERR_EMAIL_TAKEN"
     ]
   },

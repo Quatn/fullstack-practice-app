@@ -3,13 +3,7 @@
 import { Field } from "@/components/ui/field";
 import { PasswordInput } from "@/components/ui/password-input";
 import { toaster } from "@/components/ui/toaster";
-import { CODE_REGEX } from "@/constants/code-regex";
-import { PASSWORD_REGEX } from "@/constants/password-regex";
 import { useLoginMutation } from "@/service/api/authApiSlice";
-import { setCredentials } from "@/service/features/authSlice";
-import { useAppDispatch } from "@/service/hooks";
-import { devlog } from "@/utils/devlog";
-import { tryGetApiErrorMsg } from "@/utils/tryGetApiErrorMsg";
 import {
   Alert,
   Button,
@@ -22,30 +16,17 @@ import {
   Input,
   Link as ChakraLink,
   Stack,
-  SkeletonText,
-  Badge,
-  Skeleton,
+  Spinner,
 } from "@chakra-ui/react";
 import check from "check-types";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
-import { ColorModeButton } from "../ui/color-mode";
 import { config } from "@/config/config";
 import { useFormatMessage } from "@/lib/intl/useFormatMessage";
 import { tryGetApiErrorCode } from "@/utils/tryGetApiErrorCode";
 import { LocaleKey } from "@/lib/intl/intl";
-import { FormattedText } from "@/lib/intl/FormattedText";
-
-const FText = ({ id }: { id: LocaleKey }) => {
-  return (
-    <FormattedText
-      as={"span"}
-      id={id}
-      placeholder={<Skeleton as={"span"} mx={1} height={"1rem"} width={"5rem"} display={"inline-block"} />}
-    />
-  )
-}
+import { FormattedTextWithSkeletonPlaceholder as T } from "@/components/presets/FormattedTextWithSkeletonPlaceholder";
 
 type LoginFormFields = {
   loginKey: string
@@ -53,19 +34,15 @@ type LoginFormFields = {
 }
 
 export default function LoginBox() {
+  const t = useFormatMessage();
   const {
-    register,
     handleSubmit,
-    watch,
     control,
     formState: { errors },
     trigger,
   } = useForm<LoginFormFields>()
-  const t = useFormatMessage();
 
   const router = useRouter();
-
-  const dispatch = useAppDispatch();
 
   const [login, { isLoading: isLoggingIn, error: logInError }] =
     useLoginMutation();
@@ -75,6 +52,7 @@ export default function LoginBox() {
       const response = await login(data).unwrap();
       const userData = response.data?.userState;
       if (!check.nonEmptyObject(userData)) {
+        // TODO
         throw "Invalid login response";
       }
       toaster.create({
@@ -96,37 +74,83 @@ export default function LoginBox() {
     }
   }
 
+  const formErrorParse = (err: keyof LoginFormFields): string | undefined => {
+    switch (err) {
+      case "loginKey":
+        switch (errors[err]?.type) {
+          case "minLength":
+          case "maxLength":
+            return t("auth.login.form.error.loginKey.length",
+              {
+                min: config.MIN_USER_CODE_LENGTH,
+                max: config.MAX_USER_CODE_LENGTH
+              });
+          case "required":
+            return t("auth.login.form.error.loginKey.required");
+          default:
+            return undefined;
+        }
+
+      case "password":
+        switch (errors[err]?.type) {
+          case "minLength":
+          case "maxLength":
+            return t("auth.login.form.error.password.length", {
+              min: config.MIN_PASSWORD_LENGTH,
+              max: config.MAX_PASSWORD_LENGTH
+            });
+          case "required":
+            return t("auth.login.form.error.password.required");
+          default:
+            return undefined;
+        }
+
+      default:
+        return undefined;
+    }
+  }
+
   return (
     <CardRoot w="lg">
       <CardHeader>
         <CardTitle>
-          <FText id="auth.login.title" />
+          <T id="auth.login.title" />
         </CardTitle>
         <CardDescription>
-          <FText id="words.Or" /> <Link href={"register"}><ChakraLink color={"blue.500"} as="span">{
-            <FText id="auth.login.form.link.register" />
-          }</ChakraLink> </Link> <FText id="auth.login.form.description" />
+          <T id="words.Or" /> <Link href={"register"}><ChakraLink color={"blue.500"} as="span">{
+            <T id="auth.login.link.register" />
+          }</ChakraLink> </Link> <T id="auth.login.form.description" />
         </CardDescription>
       </CardHeader>
       <CardBody>
         <form onSubmit={handleSubmit(onSubmit)}>
           <Stack gap="4" w="full">
-            <Field label={<FText id="auth.login.form.label.loginKey" />}>
+            <Field
+              label={<T id="auth.login.form.label.loginKey" />}
+              errorText={formErrorParse("loginKey")}
+              invalid={!!errors.loginKey}
+            >
               <Controller
                 name="loginKey"
                 control={control}
-                rules={{ required: true, pattern: CODE_REGEX, min: config.MIN_USER_CODE_LENGTH, max: config.MAX_USER_CODE_LENGTH, onChange: () => { trigger("loginKey") } }}
+                rules={{ required: true, minLength: config.MIN_USER_CODE_LENGTH, maxLength: config.MAX_USER_CODE_LENGTH, onChange: () => { trigger("loginKey") } }}
                 render={({ field }) => <Input {...field} />}
               />
             </Field>
-            <Field label={<FText id="auth.login.form.label.password" />}>
+
+            <Field
+              label={<T id="auth.login.form.label.password" />}
+              errorText={formErrorParse("password")}
+              invalid={!!errors.password}
+            >
               <Controller
                 name="password"
                 control={control}
-                rules={{ required: true, pattern: PASSWORD_REGEX, min: config.MIN_PASSWORD_LENGTH, max: config.MAX_PASSWORD_LENGTH, onChange: () => { trigger("password") } }}
+                rules={{ required: true, minLength: config.MIN_PASSWORD_LENGTH, maxLength: config.MAX_PASSWORD_LENGTH, onChange: () => { trigger("password") } }}
                 render={({ field }) => <PasswordInput {...field} />}
               />
             </Field>
+
             {logInError && (
               <Alert.Root status={"error"}>
                 <Alert.Indicator />
@@ -145,9 +169,16 @@ export default function LoginBox() {
       </CardBody>
       <CardFooter justifyContent="flex-end">
         <Link href={"/"}>
-          <Button variant="outline">Về trang chủ</Button>
+          <Button variant="outline"><T id="auth.login.link.home" /></Button>
         </Link>
-        <Button disabled={!!errors.loginKey || !!errors.password} colorPalette={"blue"} variant="solid" onClick={handleSubmit(onSubmit)}>Đăng nhập</Button>
+        <Button
+          disabled={!!errors.loginKey || !!errors.password || isLoggingIn}
+          colorPalette={"blue"}
+          variant="solid"
+          onClick={handleSubmit(onSubmit)}
+        >
+          <T id='auth.login.form.button.submit' /> {isLoggingIn && <Spinner />}
+        </Button>
       </CardFooter>
     </CardRoot>
   );

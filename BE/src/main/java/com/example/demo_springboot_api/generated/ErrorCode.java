@@ -92,6 +92,13 @@ public enum ErrorCode {
     }
   },
 
+  AUTH_REGISTER_ERR_USER_CODE_TAKEN {
+    @Override
+    public String toString() {
+      return "ERR_USER_CODE_TAKEN";
+    }
+  },
+
   AUTH_REGISTER_ERR_EMAIL_TAKEN {
     @Override
     public String toString() {
