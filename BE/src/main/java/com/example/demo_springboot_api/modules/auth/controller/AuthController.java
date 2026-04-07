@@ -1,6 +1,7 @@
 package com.example.demo_springboot_api.modules.auth.controller;
 
 import com.example.demo_springboot_api.common.encoder.token.TokenEncoder;
+import com.example.demo_springboot_api.common.errors.InvalidCredentialException;
 import com.example.demo_springboot_api.common.utils.ResponseHelper;
 import com.example.demo_springboot_api.generated.ErrorCode;
 import com.example.demo_springboot_api.modules.auth.constant.ModuleConstants;
@@ -25,7 +26,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -43,8 +43,6 @@ public class AuthController {
   @Value("${REFRESH_TOKEN_EXPIRATION_SECONDS}")
   private long REFRESH_TOKEN_EXPIRATION_SECONDS;
 
-  @Autowired private PasswordEncoder encoder;
-
   @Autowired private JwtService jwtService;
 
   @Autowired private AuthService authService;
@@ -57,8 +55,9 @@ public class AuthController {
 
   @PostMapping(path = "/login")
   public @ResponseBody ResponseEntity<LoginResponse> login(@RequestBody LoginForm loginForm) {
-    User user = authService.login(loginForm.loginKey(), loginForm.password());
-    if (encoder.matches(loginForm.password(), user.getPassword())) {
+    try {
+      User user = authService.login(loginForm.loginKey(), loginForm.password());
+
       AuthResponseDataBundle bundle = addAuthSessionAndCreateCookie(user);
 
       return ResponseEntity.status(HttpStatus.OK)
@@ -68,14 +67,14 @@ public class AuthController {
                   "Login successfully",
                   new LoginResponseData(bundle.userState()),
                   LoginResponse::new));
+    } catch (InvalidCredentialException e) {
+      return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+          .body(
+              ResponseHelper.error(
+                  "Login unsuccessfully: Wrong email or password",
+                  ErrorCode.AUTH_LOGIN_ERR_WRONG_CREDENTIAL,
+                  LoginResponse::new));
     }
-
-    return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-        .body(
-            ResponseHelper.error(
-                "Login unsuccessfully: Wrong email or password",
-                ErrorCode.AUTH_LOGIN_ERR_WRONG_CREDENTIAL,
-                LoginResponse::new));
   }
 
   @PostMapping(path = "/register")
@@ -156,22 +155,4 @@ public class AuthController {
 
     return new AuthResponseDataBundle(cookie, userState);
   }
-
-  /*
-  @PostMapping(path = "/getall")
-  public @ResponseBody ResponseEntity<BaseResponse<String, String>> getAllUsers() {
-    String out = "";
-    Iterator<User> users = userRepository.findAll().iterator();
-    while (users.hasNext()) {
-      User user = users.next();
-      out += user.getName();
-      if (users.hasNext()) {
-        out += ", ";
-      }
-    }
-
-    return ResponseEntity.status(HttpStatus.OK)
-        .body(BaseResponse.success("Get all successfully", out));
-  }
-  */
 }
