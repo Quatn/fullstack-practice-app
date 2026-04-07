@@ -8,7 +8,7 @@ import org.springframework.data.repository.CrudRepository;
 // CRUD refers Create, Read, Update, Delete
 
 public interface AuthSessionRepository extends CrudRepository<AuthSession, Long> {
-  Optional<AuthSession> findByUserId(String userId);
+  Optional<AuthSession> findByUserId(Long userId);
 
   Optional<AuthSession> findByUuid(String uuid);
 }

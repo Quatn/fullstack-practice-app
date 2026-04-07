@@ -5,26 +5,16 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import com.example.demo_springboot_api.modules.user.entity.User;
 import com.example.demo_springboot_api.modules.user.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import java.util.Date;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
+@Transactional
 class UserRepositoryTest extends BaseRepositoryTest {
   @Autowired private UserRepository userRepository;
-
-  private User getMockUser() {
-    User user = new User();
-    user.setId(Long.valueOf(100));
-    user.setCode("big.j.awesome");
-    user.setName("John");
-    user.setEmail("john@gmail.com");
-    user.setPassword("Klmnop123_HASHED_PASSWORD");
-    user.setCreatedAt(new Date(1000000));
-    user.setUpdatedAt(new Date(1000000));
-    return user;
-  }
 
   private void assertUserEquals(User u1, User u2) {
     assertEquals(u1.getId(), u2.getId());
@@ -38,10 +28,13 @@ class UserRepositoryTest extends BaseRepositoryTest {
 
   @Test
   void save_shouldSaveUser() {
-    User user = getMockUser();
-
-    // Sets id to null so that userRepository inserts as a new row.
-    user.setId(null);
+    User user = new User();
+    user.setCode("big.j.awesome");
+    user.setName("John");
+    user.setEmail("john@gmail.com");
+    user.setPassword("Klmnop123_HASHED_PASSWORD");
+    user.setCreatedAt(new Date(1000000));
+    user.setUpdatedAt(new Date(1000000));
 
     User saved = userRepository.save(user);
 
