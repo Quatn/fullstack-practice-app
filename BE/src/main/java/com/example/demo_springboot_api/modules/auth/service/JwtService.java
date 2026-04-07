@@ -1,5 +1,6 @@
 package com.example.demo_springboot_api.modules.auth.service;
 
+import com.example.demo_springboot_api.modules.auth.constant.ModuleConstants;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
@@ -25,7 +26,7 @@ public class JwtService {
   public String generateToken(UserDetails userDetails) {
     return Jwts.builder()
         .subject(userDetails.getUsername())
-        .claim("accessPrivileges", userDetails.getAuthorities())
+        .claim(ModuleConstants.JWT_TOKEN_ACCESS_PRIVILEGES_CLAIM, userDetails.getAuthorities())
         .issuedAt(new Date())
         .expiration(new Date(System.currentTimeMillis() + 1000 * TOKEN_EXPIRATION_SECONDS))
         .signWith(getSignKey())

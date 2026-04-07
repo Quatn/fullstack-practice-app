@@ -24,7 +24,7 @@ class AuthIntegrationTest extends BaseIntegrationTest {
     String json =
         """
             {
-              "code": "john.j.aw",
+              "code": "john.j.tester",
               "name": "John",
               "email": "john@gmail.com",
               "password": "Klmnop123@hgh"
