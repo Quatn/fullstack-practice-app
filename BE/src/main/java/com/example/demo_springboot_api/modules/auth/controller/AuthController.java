@@ -1,7 +1,8 @@
 package com.example.demo_springboot_api.modules.auth.controller;
 
 import com.example.demo_springboot_api.common.encoder.token.TokenEncoder;
-import com.example.demo_springboot_api.common.errors.InvalidCredentialException;
+import com.example.demo_springboot_api.common.errors.WrongCredentialException;
+import com.example.demo_springboot_api.common.utils.BindingResultExtractor;
 import com.example.demo_springboot_api.common.utils.ResponseHelper;
 import com.example.demo_springboot_api.generated.ErrorCode;
 import com.example.demo_springboot_api.modules.auth.constant.ModuleConstants;
@@ -17,6 +18,7 @@ import com.example.demo_springboot_api.modules.auth.service.AuthSessionService;
 import com.example.demo_springboot_api.modules.auth.service.JwtService;
 import com.example.demo_springboot_api.modules.user.entity.User;
 import com.example.demo_springboot_api.modules.user.service.UserService;
+import jakarta.validation.Valid;
 import java.util.Date;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +29,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -54,7 +57,18 @@ public class AuthController {
   @Autowired private TokenEncoder tokenEncoder;
 
   @PostMapping(path = "/login")
-  public @ResponseBody ResponseEntity<LoginResponse> login(@RequestBody LoginForm loginForm) {
+  public @ResponseBody ResponseEntity<LoginResponse> login(
+      @Valid @RequestBody LoginForm loginForm, BindingResult validationResult) {
+    if (validationResult.hasErrors()) {
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+          .body(
+              ResponseHelper.error(
+                  "Login unsuccessfully: Invalid credentials: "
+                      + BindingResultExtractor.getFieldRejectedValueMessage(validationResult),
+                  ErrorCode.AUTH_LOGIN_ERR_INVALID_CREDENTIAL,
+                  LoginResponse::new));
+    }
+
     try {
       User user = authService.login(loginForm.loginKey(), loginForm.password());
 
@@ -67,11 +81,11 @@ public class AuthController {
                   "Login successfully",
                   new LoginResponseData(bundle.userState()),
                   LoginResponse::new));
-    } catch (InvalidCredentialException e) {
+    } catch (WrongCredentialException e) {
       return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
           .body(
               ResponseHelper.error(
-                  "Login unsuccessfully: Wrong email or password",
+                  "Login unsuccessfully: Wrong login code or password",
                   ErrorCode.AUTH_LOGIN_ERR_WRONG_CREDENTIAL,
                   LoginResponse::new));
     }

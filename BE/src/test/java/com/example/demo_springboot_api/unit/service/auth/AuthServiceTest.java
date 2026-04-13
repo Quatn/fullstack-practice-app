@@ -5,8 +5,8 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
-import com.example.demo_springboot_api.common.errors.InvalidCredentialException;
 import com.example.demo_springboot_api.common.errors.UserNotFoundException;
+import com.example.demo_springboot_api.common.errors.WrongCredentialException;
 import com.example.demo_springboot_api.modules.auth.service.AuthService;
 import com.example.demo_springboot_api.modules.user.entity.User;
 import com.example.demo_springboot_api.modules.user.repository.UserRepository;
@@ -53,17 +53,18 @@ class AuthServiceTest extends BaseUnitTest {
   }
 
   @Test
-  void login_shouldThrowError_whenInvalidCredential() {
+  void login_shouldThrowError_whenWrongCredential() {
     User user = MockData.mockUser();
-    String incorrectPassword = "UnhashedButIncorrectPassword";
+    String wrongPassword =
+        "APasswordThatIsUnhashedAndConformsToDataFormatRequirementButIsNotCorrect";
 
     when(userRepository.findByCode(user.getCode())).thenReturn(Optional.of(user));
-    when(encoder.matches(incorrectPassword, user.getPassword())).thenReturn(false);
+    when(encoder.matches(wrongPassword, user.getPassword())).thenReturn(false);
 
     assertThrows(
-        InvalidCredentialException.class,
+        WrongCredentialException.class,
         () -> {
-          authService.login(user.getCode(), incorrectPassword);
+          authService.login(user.getCode(), wrongPassword);
         });
   }
 }

@@ -2,6 +2,7 @@ package com.example.demo_springboot_api.modules.auth.service;
 
 import com.example.demo_springboot_api.common.errors.InvalidCredentialException;
 import com.example.demo_springboot_api.common.errors.UserNotFoundException;
+import com.example.demo_springboot_api.common.errors.WrongCredentialException;
 import com.example.demo_springboot_api.modules.user.entity.User;
 import com.example.demo_springboot_api.modules.user.repository.UserRepository;
 import java.util.Optional;
@@ -24,7 +25,7 @@ public class AuthService {
 
     User user = userQuery.get();
     if (!encoder.matches(password, user.getPassword())) {
-      throw new InvalidCredentialException("User code or password is incorrect.");
+      throw new WrongCredentialException("User code or password is incorrect.");
     }
 
     return user;

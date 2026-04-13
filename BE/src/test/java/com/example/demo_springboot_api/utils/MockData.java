@@ -11,7 +11,7 @@ public class MockData {
     user.setCode("big.j.tester");
     user.setName("John");
     user.setEmail("john@gmail.com");
-    user.setPassword("Klmnop123");
+    user.setPassword("Klmnop123@");
     user.setCreatedAt(new Date(1000000));
     user.setUpdatedAt(new Date(1000000));
     return user;
