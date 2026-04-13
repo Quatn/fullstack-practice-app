@@ -3,7 +3,7 @@
 import { Field } from "@/components/ui/field";
 import { PasswordInput } from "@/components/ui/password-input";
 import { toaster } from "@/components/ui/toaster";
-import { CODE_REGEX } from "@/constants/code-regex";
+import { USER_CODE_REGEX } from "@/constants/user-code-regex";
 import { PASSWORD_REGEX } from "@/constants/password-regex";
 import { useRegisterMutation } from "@/service/api/authApiSlice";
 import {
@@ -185,7 +185,7 @@ export default function RegisterBox() {
                   required: true,
                   minLength: config.MIN_USER_CODE_LENGTH,
                   maxLength: config.MAX_USER_CODE_LENGTH,
-                  pattern: CODE_REGEX,
+                  pattern: USER_CODE_REGEX,
                   onChange: () => { trigger("code") }
                 }}
                 render={({ field }) => <Input {...field} />}
