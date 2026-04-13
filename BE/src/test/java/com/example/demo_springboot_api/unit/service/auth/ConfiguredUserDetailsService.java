@@ -7,18 +7,16 @@ import static org.mockito.Mockito.when;
 import com.example.demo_springboot_api.modules.auth.service.ConfiguredUserDetailsService;
 import com.example.demo_springboot_api.modules.user.entity.User;
 import com.example.demo_springboot_api.modules.user.repository.UserRepository;
+import com.example.demo_springboot_api.unit.BaseUnitTest;
 import com.example.demo_springboot_api.utils.MockData;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
-@ExtendWith(MockitoExtension.class)
-class ConfiguredUserDetailsServiceTest {
+class ConfiguredUserDetailsServiceTest extends BaseUnitTest {
 
   @Mock private UserRepository userRepository;
 

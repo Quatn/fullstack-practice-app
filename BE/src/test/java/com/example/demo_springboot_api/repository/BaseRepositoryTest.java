@@ -1,7 +1,5 @@
 package com.example.demo_springboot_api.repository;
 
-import com.example.demo_springboot_api.TestcontainersConfiguration;
-import org.springframework.context.annotation.Import;
+import com.example.demo_springboot_api.BaseTest;
 
-@Import(TestcontainersConfiguration.class)
-public abstract class BaseRepositoryTest {}
+public abstract class BaseRepositoryTest extends BaseTest {}

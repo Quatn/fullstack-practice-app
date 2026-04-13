@@ -11,16 +11,14 @@ import com.example.demo_springboot_api.common.errors.InvalidAuthSessionException
 import com.example.demo_springboot_api.modules.auth.entity.AuthSession;
 import com.example.demo_springboot_api.modules.auth.repository.AuthSessionRepository;
 import com.example.demo_springboot_api.modules.auth.service.AuthSessionService;
+import com.example.demo_springboot_api.unit.BaseUnitTest;
 import com.example.demo_springboot_api.utils.MockData;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 
-@ExtendWith(MockitoExtension.class)
-class AuthSessionServiceTest {
+class AuthSessionServiceTest extends BaseUnitTest {
 
   @Mock private AuthSessionRepository authSessionRepository;
 
