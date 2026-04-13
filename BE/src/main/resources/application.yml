@@ -1,0 +1,9 @@
+spring:
+  application:
+    name: demo-springboot-api-a
+  config:
+    import: optional:configtree:/run/secrets/
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
