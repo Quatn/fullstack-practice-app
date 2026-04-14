@@ -93,7 +93,16 @@ public class AuthController {
 
   @PostMapping(path = "/register")
   public @ResponseBody ResponseEntity<RegisterResponse> register(
-      @RequestBody RegisterForm registerForm) {
+      @Valid @RequestBody RegisterForm registerForm, BindingResult validationResult) {
+    if (validationResult.hasErrors()) {
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+          .body(
+              ResponseHelper.error(
+                  "Unable to register: Invalid credentials: "
+                      + BindingResultExtractor.getFieldRejectedValueMessage(validationResult),
+                  ErrorCode.AUTH_LOGIN_ERR_INVALID_CREDENTIAL,
+                  RegisterResponse::new));
+    }
 
     if (!authService.checkCodeAvailable(registerForm.code())) {
       return ResponseEntity.status(HttpStatus.BAD_REQUEST)

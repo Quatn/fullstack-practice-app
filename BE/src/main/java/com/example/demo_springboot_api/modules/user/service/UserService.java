@@ -14,6 +14,8 @@ public class UserService {
   @Autowired private PasswordEncoder encoder;
 
   public User addUser(User userInfo) {
+    // Ensure that a new user is added even if userInfo's id is left not null
+    userInfo.setId(null);
     // Encrypt password before saving
     userInfo.setPassword(encoder.encode(userInfo.getPassword()));
     return userRepository.save(userInfo);

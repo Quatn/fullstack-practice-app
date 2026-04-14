@@ -17,6 +17,7 @@ import com.example.demo_springboot_api.modules.auth.controller.AuthController;
 import com.example.demo_springboot_api.modules.auth.dto.LoginForm;
 import com.example.demo_springboot_api.modules.auth.dto.LoginResponse;
 import com.example.demo_springboot_api.modules.auth.dto.LoginResponseData;
+import com.example.demo_springboot_api.modules.auth.dto.RegisterForm;
 import com.example.demo_springboot_api.modules.auth.dto.UserState;
 import com.example.demo_springboot_api.modules.auth.service.AuthService;
 import com.example.demo_springboot_api.modules.auth.service.AuthSessionService;
@@ -141,10 +142,10 @@ class AuthControllerTest extends BaseControllerTest {
   void login_shouldResponseCodeBadRequestWithInvalidCredentialError_whenInvalidLoginKey()
       throws Exception {
     User user = MockData.mockUser();
-    String loginKey = "...invalidLoginKey...";
+    String invalidLoginKey = "...invalidLoginKey...";
     String validPassword = user.getPassword();
 
-    LoginForm loginForm = new LoginForm(loginKey, validPassword);
+    LoginForm loginForm = new LoginForm(invalidLoginKey, validPassword);
 
     when(authService.login(loginForm.loginKey(), loginForm.password())).thenReturn(user);
 
@@ -170,24 +171,75 @@ class AuthControllerTest extends BaseControllerTest {
     assertEquals(error, ErrorCode.AUTH_LOGIN_ERR_INVALID_CREDENTIAL);
   }
 
-  /*
+  @Test
+  @WithMockUser(
+      username = "admin",
+      roles = {"ADMIN"})
+  void login_shouldResponseCodeBadRequestWithInvalidCredentialError_whenInvalidPassword()
+      throws Exception {
+    User user = MockData.mockUser();
+    String validLoginKey = user.getCode();
+    String invalidPassword = "Invalid Password   ";
+
+    LoginForm loginForm = new LoginForm(validLoginKey, invalidPassword);
+
+    when(authService.login(loginForm.loginKey(), loginForm.password())).thenReturn(user);
+
+    ObjectMapper objectMapper = new ObjectMapper();
+
+    MvcResult result =
+        mockMvc
+            .perform(
+                post(ModuleConstants.BASE_PATH + "/login")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(loginForm)))
+            .andExpect(status().isBadRequest())
+            .andReturn();
+
+    String json = result.getResponse().getContentAsString();
+    LoginResponse response = objectMapper.readValue(json, LoginResponse.class);
+
+    LoginResponseData data = response.data;
+    assertNull(data);
+
+    ErrorCode error = response.error;
+    assertNotNull(error);
+    assertEquals(error, ErrorCode.AUTH_LOGIN_ERR_INVALID_CREDENTIAL);
+  }
+
   @Test
   @WithMockUser(
       username = "admin",
       roles = {"ADMIN"})
   void register_shouldResponseCodeOkWithRefreshTokenCookie_whenSuccessful() throws Exception {
     User user = MockData.mockUser();
-    String loginKey = user.getCode();
+
+    String code = user.getCode();
+    String email = user.getEmail();
+    String name = user.getName();
     String password = user.getPassword();
 
-    LoginForm loginForm = new LoginForm(loginKey, password);
+    RegisterForm registerForm = new RegisterForm(code, email, name, password);
 
-    // Encode password because the service will return the password that's saved on the database,
-    // which is encoded.
-    user.setPassword(mockEncode(password));
-    when(authService.login(loginForm.loginKey(), loginForm.password())).thenReturn(user);
-    when(encoder.matches(loginForm.password(), user.getPassword()))
-        .thenReturn(mockMatches(loginForm.password(), user.getPassword()));
+    when(authService.checkCodeAvailable(registerForm.code())).thenReturn(true);
+    when(authService.checkEmailAvailable(registerForm.email())).thenReturn(true);
+    when(userService.addUser(any()))
+        .then(
+            (invocation) -> {
+              User userInfo = invocation.getArgument(0, User.class);
+              // Ensure that the controller calls addUser correctly
+              if (userInfo.getCode().equals(registerForm.code())
+                  && userInfo.getEmail().equals(registerForm.email())
+                  && userInfo.getName().equals(registerForm.name())
+                  && userInfo.getPassword().equals(registerForm.password())) {
+                user.setId(Long.valueOf(1001));
+                user.setPassword(mockEncode(registerForm.password()));
+                return user;
+              }
+              throw new Exception("Test setup or bug in userService");
+            });
+    when(encoder.matches(registerForm.password(), user.getPassword()))
+        .thenReturn(mockMatches(registerForm.password(), user.getPassword()));
     when(jwtService.generateToken(anyString(), any(), any(Date.class), any(Date.class)))
         .thenReturn("mock-refresh-token");
 
@@ -198,9 +250,8 @@ class AuthControllerTest extends BaseControllerTest {
             .perform(
                 post(ModuleConstants.BASE_PATH + "/register")
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsString(loginForm)))
-            .andExpect(status().isOk())
-            .andExpect(status().isOk())
+                    .content(objectMapper.writeValueAsString(registerForm)))
+            .andExpect(status().isCreated())
             .andExpect(cookie().exists(ModuleConstants.REFRESH_TOKEN_COOKIE_NAME))
             .andExpect(
                 cookie().value(ModuleConstants.REFRESH_TOKEN_COOKIE_NAME, "mock-refresh-token"))
@@ -210,12 +261,13 @@ class AuthControllerTest extends BaseControllerTest {
 
     String json = result.getResponse().getContentAsString();
     LoginResponse response = objectMapper.readValue(json, LoginResponse.class);
+    assertNotNull(response.data);
 
     UserState userState = response.data.userState();
+    assertNotNull(userState.id());
     assertEquals(user.getId().toString(), userState.id());
     assertEquals(user.getName(), userState.name());
     assertEquals(user.getEmail(), userState.email());
     assertArrayEquals(user.getAccessPrivilegesArray(), userState.accessPrivileges());
   }
-  */
 }

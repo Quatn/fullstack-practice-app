@@ -37,8 +37,11 @@ class UserServiceTest {
   void addUser_shouldReturnUser_whenSuccessful() {
     User user = MockData.mockUser();
 
-    String encodedPassword = mockEncode(user.getPassword());
+    // The addUser function should set input's id to null regardless, but in normal cases the
+    // input's id will be null from before reaching the function, so this will test that case.
+    user.setId(null);
 
+    String encodedPassword = mockEncode(user.getPassword());
     when(userRepository.save(user)).thenReturn(user);
     when(encoder.encode(user.getPassword())).thenReturn(encodedPassword);
 

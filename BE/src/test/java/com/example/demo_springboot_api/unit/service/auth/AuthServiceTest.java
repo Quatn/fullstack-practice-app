@@ -1,8 +1,10 @@
 package com.example.demo_springboot_api.unit.service.auth;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
 import com.example.demo_springboot_api.common.errors.UserNotFoundException;
@@ -66,5 +68,27 @@ class AuthServiceTest extends BaseUnitTest {
         () -> {
           authService.login(user.getCode(), wrongPassword);
         });
+  }
+
+  @Test
+  void checkCodeAvailable_shouldReturnTrue_whenCodeIsAvailable() {
+    User user = MockData.mockUser();
+
+    when(userRepository.checkCodeAvailable(user.getCode())).thenReturn(true);
+
+    Boolean result = authService.checkCodeAvailable(user.getCode());
+
+    assertTrue(result);
+  }
+
+  @Test
+  void checkCodeAvailable_shouldReturnFalse_whenCodeIsNotAvailable() {
+    User user = MockData.mockUser();
+
+    when(userRepository.checkCodeAvailable(user.getCode())).thenReturn(false);
+
+    Boolean result = authService.checkCodeAvailable(user.getCode());
+
+    assertFalse(result);
   }
 }
