@@ -25,6 +25,11 @@ public class TestDataFactory {
     return userRepository.save(user);
   }
 
+  public User createAndSaveUser(User user) {
+    user.setId(null);
+    return userRepository.save(user);
+  }
+
   public AuthSession createAndSaveSession(User user, String tokenHash, String uuid) {
     long now = System.currentTimeMillis();
     Date createdDate = new Date(now);
