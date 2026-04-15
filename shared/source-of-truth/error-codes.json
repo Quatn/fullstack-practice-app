@@ -6,7 +6,13 @@
     "ERR_METHOD_ARGUMENT_NOT_VALID"
   ],
   "auth": {
-    "token": ["ERR_INVALID_TOKEN", "ERR_MALFORMED_TOKEN"],
+    "token": ["ERR_INVALID_TOKEN", "ERR_EXPIRED_TOKEN", "ERR_MALFORMED_TOKEN"],
+    "state": ["ERR_AUTHENTICATED_ONLY"],
+    "session": [
+      "ERR_INVALID_AUTH_SESSION",
+      "ERR_EXPIRED_AUTH_SESSION",
+      "ERR_REVOKED_AUTH_SESSION"
+    ],
     "login": [
       "ERR_USER_NOT_FOUND",
       "ERR_INVALID_CREDENTIAL",

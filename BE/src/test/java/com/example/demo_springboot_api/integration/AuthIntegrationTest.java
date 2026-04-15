@@ -9,19 +9,14 @@ import com.example.demo_springboot_api.utils.MockData;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 @SpringBootTest
 @Testcontainers
 @Transactional
 class AuthIntegrationTest extends BaseIntegrationTest {
-
-  @Autowired private MockMvc mockMvc;
-
   /*
    * HAPPY CASES
    */

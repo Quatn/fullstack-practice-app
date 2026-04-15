@@ -1,8 +1,10 @@
 package com.example.demo_springboot_api.modules.auth.controller;
 
 import com.example.demo_springboot_api.common.encoder.token.TokenEncoder;
+import com.example.demo_springboot_api.common.errors.AuthenticatedOnlyException;
 import com.example.demo_springboot_api.common.errors.ExpiredAuthSessionException;
 import com.example.demo_springboot_api.common.errors.InvalidAuthSessionException;
+import com.example.demo_springboot_api.common.errors.RevokedAuthSessionException;
 import com.example.demo_springboot_api.common.utils.ResponseHelper;
 import com.example.demo_springboot_api.modules.auth.config.ConfiguredUserDetails;
 import com.example.demo_springboot_api.modules.auth.constant.ModuleConstants;
@@ -32,7 +34,12 @@ public class JwtAuthController {
 
   @GetMapping(path = "/refresh")
   public @ResponseBody ResponseEntity<TokenRefreshResponse> tokenRefresh(
-      @CookieValue(ModuleConstants.REFRESH_TOKEN_COOKIE_NAME) String refreshToken) {
+      @CookieValue(value = ModuleConstants.REFRESH_TOKEN_COOKIE_NAME, required = false)
+          String refreshToken) {
+
+    if (refreshToken == null) {
+      throw new AuthenticatedOnlyException("Authentication required");
+    }
 
     String tokenUUID = jwtService.extractUsername(refreshToken);
     AuthSession session = authSessionService.findByUUID(tokenUUID);
@@ -45,8 +52,12 @@ public class JwtAuthController {
     long now = System.currentTimeMillis();
     Date currentDate = new Date(now);
 
-    if (session.getRevoked() || currentDate.after(session.getExpiresAt())) {
-      throw new ExpiredAuthSessionException("Auth session expired or reworked");
+    if (session.getRevoked()) {
+      throw new RevokedAuthSessionException("Auth session revoked");
+    }
+
+    if (currentDate.after(session.getExpiresAt())) {
+      throw new ExpiredAuthSessionException("Auth session expired");
     }
 
     // TODO: Also match devide info, or send warning over unmatched device info

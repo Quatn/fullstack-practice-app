@@ -50,10 +50,45 @@ public enum ErrorCode {
     }
   },
 
+  AUTH_TOKEN_ERR_EXPIRED_TOKEN {
+    @Override
+    public String toString() {
+      return "ERR_EXPIRED_TOKEN";
+    }
+  },
+
   AUTH_TOKEN_ERR_MALFORMED_TOKEN {
     @Override
     public String toString() {
       return "ERR_MALFORMED_TOKEN";
+    }
+  },
+
+  AUTH_STATE_ERR_AUTHENTICATED_ONLY {
+    @Override
+    public String toString() {
+      return "ERR_AUTHENTICATED_ONLY";
+    }
+  },
+
+  AUTH_SESSION_ERR_INVALID_AUTH_SESSION {
+    @Override
+    public String toString() {
+      return "ERR_INVALID_AUTH_SESSION";
+    }
+  },
+
+  AUTH_SESSION_ERR_EXPIRED_AUTH_SESSION {
+    @Override
+    public String toString() {
+      return "ERR_EXPIRED_AUTH_SESSION";
+    }
+  },
+
+  AUTH_SESSION_ERR_REVOKED_AUTH_SESSION {
+    @Override
+    public String toString() {
+      return "ERR_REVOKED_AUTH_SESSION";
     }
   },
 
