@@ -1,6 +1,10 @@
 package com.example.demo_springboot_api.utils;
 
 import com.example.demo_springboot_api.modules.auth.entity.AuthSession;
+import com.example.demo_springboot_api.modules.chat.constant.ConversationType;
+import com.example.demo_springboot_api.modules.chat.entity.Conversation;
+import com.example.demo_springboot_api.modules.chat.entity.ConversationParticipant;
+import com.example.demo_springboot_api.modules.chat.entity.Message;
 import com.example.demo_springboot_api.modules.user.entity.User;
 import java.util.Date;
 
@@ -29,5 +33,42 @@ public class MockData {
     session.setRevoked(false);
     session.setDeviceInfo("");
     return session;
+  }
+
+  public static Conversation mockConversation() {
+    Conversation conversation = new Conversation();
+    conversation.setId(Long.valueOf(102));
+    conversation.setName("Test Room");
+    conversation.setCoverUrl("http://example.com");
+    conversation.setType(ConversationType.ROOM);
+    conversation.setCreatedat(new Date());
+    conversation.setUpdatedat(new Date());
+    return conversation;
+  }
+
+  public static ConversationParticipant mockConversationParticipant() {
+    Conversation conversation = mockConversation();
+    User user = mockUser();
+
+    ConversationParticipant conversationParticipant = new ConversationParticipant();
+    conversationParticipant.setConversation(conversation);
+    conversationParticipant.setUser(user);
+
+    return conversationParticipant;
+  }
+
+  public static Message mockMessage() {
+    Conversation conversation = mockConversation();
+    User user = mockUser();
+
+    Message message = new Message();
+    message.setId(Long.valueOf(103));
+    message.setConversation(conversation);
+    message.setSender(user);
+    message.setContent("Test Message");
+    message.setMetaData("test-meta-data=test");
+    message.setCreatedat(new Date());
+    message.setUpdatedat(new Date());
+    return message;
   }
 }

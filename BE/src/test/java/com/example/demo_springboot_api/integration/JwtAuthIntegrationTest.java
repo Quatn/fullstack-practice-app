@@ -114,9 +114,7 @@ class JwtAuthIntegrationTest extends BaseIntegrationTest {
   }
 
   @Test
-  @DisplayName(
-      "Should not return a new access token if the refresh token is missing (user is not"
-          + " authenticated)")
+  @DisplayName("Should not return a new access token if the refresh token is malformed")
   void shouldNotRefreshToken_whenRefreshTokenIsMalformed() throws Exception {
     String malformedToken = "malformedToken";
 

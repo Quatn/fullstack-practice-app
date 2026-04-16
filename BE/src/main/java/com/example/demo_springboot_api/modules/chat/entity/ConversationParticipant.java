@@ -1,5 +1,6 @@
 package com.example.demo_springboot_api.modules.chat.entity;
 
+import com.example.demo_springboot_api.common.errors.InvalidDataException;
 import com.example.demo_springboot_api.modules.chat.entity.embeddable.ConversationParticipantId;
 import com.example.demo_springboot_api.modules.user.entity.User;
 import jakarta.persistence.EmbeddedId;
@@ -27,6 +28,28 @@ public class ConversationParticipant {
   @MapsId("userId")
   @JoinColumn(name = "user_id", nullable = false)
   private User user;
+
+  public ConversationParticipantId getId() {
+    return id;
+  }
+
+  public void setId(ConversationParticipantId id) {
+    this.id = id;
+  }
+
+  public void updateId() throws InvalidDataException {
+    if (this.user == null) {
+      throw new InvalidDataException(
+          "Tried to update the id of a ConversationParticipant while its user is not set");
+    }
+
+    if (this.conversation == null) {
+      throw new InvalidDataException(
+          "Tried to update the id of a ConversationParticipant while its conversation is not set");
+    }
+
+    this.id = new ConversationParticipantId(conversation.getId(), user.getId());
+  }
 
   public void setConversation(Conversation conversation) {
     this.conversation = conversation;
