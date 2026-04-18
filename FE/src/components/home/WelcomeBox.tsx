@@ -16,7 +16,7 @@ import { LocaleKey } from "@/lib/intl/intl";
 const adminPrivs: AnyAccessPrivileges[] = ["system-admin", "system-read", "system-readWrite"]
 
 export default function WelcomeBox() {
-  const userState: UserState | null = useAppSelector((state) =>
+  const userState: UserState | undefined | null = useAppSelector((state) =>
     state.auth.userState
   );
 

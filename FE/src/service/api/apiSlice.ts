@@ -17,7 +17,7 @@ const baseQuery = fetchBaseQuery({
     */
 
     const token = authState.accessToken;
-    if (!authState.refreshingToken && token) {
+    if (!authState.isRefreshingToken && token) {
       headers.set('Authorization', `Bearer ${token}`);
     }
 

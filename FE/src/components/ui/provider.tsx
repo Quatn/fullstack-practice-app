@@ -4,11 +4,12 @@ import { ChakraProvider, defaultSystem } from "@chakra-ui/react";
 import { ColorModeProvider, type ColorModeProviderProps } from "./color-mode";
 import { useEffect, useState } from "react";
 import store from "@/service/store";
-import { hydrate as hydrateUserState, setAccessToken, setCredentials, setRefreshingToken } from "@/service/features/authSlice";
+import { hydrate as hydrateUserState, setAccessToken, setCredentials, setIsRefreshingToken } from "@/service/features/authSlice";
 import { Provider as ReduxStoreProvider } from "react-redux";
 import { useTokenRefreshQuery } from "@/service/api/authApiSlice";
 import { IntlProvider, IntlProviderProps, LocaleMessages } from "@/lib/intl/intl";
 import { importMessages } from "@/lib/intl/importMessages";
+import { WebSocketClientProvider } from "@/lib/websocket/client";
 
 export type ProviderProps = {
   intlProviderProps: Omit<IntlProviderProps, 'messages'>,
@@ -25,12 +26,12 @@ function ReduxHydrator({ children }: { children: React.ReactNode }) {
 
   if (!isFetchingToken && !fetchError) {
     const res = getRefreshTokenQuery?.data;
-    store.dispatch(setCredentials(res?.userState));
-    store.dispatch(setAccessToken(res?.accessToken));
+    store.dispatch(setCredentials(res?.userState ?? null));
+    store.dispatch(setAccessToken(res?.accessToken ?? null));
   }
 
   useEffect(() => {
-    store.dispatch(setRefreshingToken(isFetchingToken));
+    store.dispatch(setIsRefreshingToken(isFetchingToken));
   }, [isFetchingToken]);
 
   useEffect(() => {
@@ -57,7 +58,9 @@ export function Provider(props: ProviderProps) {
         <ReduxHydrator>
           <ChakraProvider value={defaultSystem}>
             <ColorModeProvider {...props.colorModeProviderProps}>
-              {props.children}
+              <WebSocketClientProvider>
+                {props.children}
+              </WebSocketClientProvider>
             </ColorModeProvider>
           </ChakraProvider>
         </ReduxHydrator>

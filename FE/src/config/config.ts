@@ -1,6 +1,7 @@
 import passwordConfig from "@/config/password-config.json"
 import localeConfig from "@/config/locale-config.json"
 import userInfoConfig from "@/config/user-info-config.json"
+import webSocketConfig from "@/config/web-socket-config.json"
 import { ConfigurationError } from "@/lib/errors/ConfigurationError"
 import check from "check-types";
 
@@ -44,8 +45,35 @@ check.map(userInfoConfig, {
     "MIN_USER_CODE_LENGTH must be between 1 and MAX_USER_CODE_LENGTH"),
 })
 
+check.map(webSocketConfig, {
+  WS_HEART_BEAT_IN_COMING: assert(
+    check.positive,
+    "WS_HEART_BEAT_IN_COMING must positive."),
+
+  WS_HEART_BEAT_OUT_GOING: assert(
+    check.positive,
+    "WS_HEART_BEAT_OUT_GOING must positive."),
+
+  WS_RECONNECT_DELAY: assert(
+    check.positive,
+    "WS_RECONNECT_DELAY must positive."),
+
+  WS_APPLICATION_DESTINATION_PREFIX: assert(
+    check.string,
+    "WS_APPLICATION_DESTINATION_PREFIX must be a string."),
+
+  WS_BROKER_ENDPOINT: assert(
+    check.string,
+    "WS_BROKER_ENDPOINT must be a string."),
+
+  WS_SOCKET_URL_ENDPOINT: assert(
+    check.string,
+    "WS_SOCKET_URL_ENDPOINT must be a string."),
+})
+
 export const config = {
   ...localeConfig,
   ...passwordConfig,
   ...userInfoConfig,
+  ...webSocketConfig,
 }

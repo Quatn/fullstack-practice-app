@@ -1,5 +1,6 @@
 package com.example.demo_springboot_api.config;
 
+import com.example.demo_springboot_api.config.constants.WebSocketConstants;
 import com.example.demo_springboot_api.modules.auth.constant.ModuleConstants;
 import com.example.demo_springboot_api.modules.auth.filter.JwtAuthFilter;
 import org.springframework.context.annotation.Bean;
@@ -37,21 +38,20 @@ public class SecurityConfig {
                     .permitAll()
                     .requestMatchers(ModuleConstants.BASE_PATH + "/**")
                     .permitAll()
+                    .requestMatchers(WebSocketConstants.SOCKET_URL_ENDPOINT + "/**")
+                    .permitAll()
                     .requestMatchers("/test")
                     .permitAll()
                     .requestMatchers("/test2")
                     .permitAll()
                     .requestMatchers("/user/dev/**")
                     .permitAll()
-
                     .requestMatchers("/v3/api-docs/**")
                     .permitAll()
                     .requestMatchers("/swagger-ui.html")
                     .permitAll()
-
                     .requestMatchers("/swagger-ui/**")
                     .permitAll()
-
                     .anyRequest()
                     .authenticated())
 

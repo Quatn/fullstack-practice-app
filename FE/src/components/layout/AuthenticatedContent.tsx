@@ -12,23 +12,23 @@ export default function AuthenticatedContent(
     // throwErrorAction?: () => Error,
   },
 ) {
-  const hydrating: boolean = useAppSelector((state) =>
-    state.auth.hydrating
+  const isHydrating: boolean = useAppSelector((state) =>
+    state.auth.isHydrating
   );
 
-  const refreshingToken: boolean = useAppSelector((state) =>
-    state.auth.refreshingToken
+  const isRefreshingToken: boolean = useAppSelector((state) =>
+    state.auth.isRefreshingToken
   );
 
-  const userState: UserState | null = useAppSelector((state) =>
+  const userState: UserState | undefined | null = useAppSelector((state) =>
     state.auth.userState
   );
 
-  const accessToken: string | null = useAppSelector((state) =>
+  const accessToken: string | undefined | null = useAppSelector((state) =>
     state.auth.accessToken
   );
 
-  if (hydrating || refreshingToken) {
+  if (isHydrating || isRefreshingToken || check.undefined(userState) || check.undefined(accessToken)) {
     if (loading) {
       return loading
     }

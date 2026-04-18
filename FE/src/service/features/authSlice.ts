@@ -4,10 +4,10 @@ import { createSlice } from "@reduxjs/toolkit";
 import check from "check-types";
 
 const initialState: AuthState = {
-  userState: null,
-  accessToken: null,
-  hydrating: true,
-  refreshingToken: true,
+  userState: undefined,
+  accessToken: undefined,
+  isHydrating: true,
+  isRefreshingToken: true,
 };
 
 const authSlice = createSlice({
@@ -20,13 +20,13 @@ const authSlice = createSlice({
         if (check.string(localUserState)) {
           state.userState = JSON.parse(localUserState);
         }
-        // state.accessToken = localStorage.getItem("accessToken");
       } catch (e) {
         devlog(e);
         localStorage.removeItem("userState");
       }
       finally {
-        state.hydrating = false
+        state.userState = null;
+        state.isHydrating = false;
       }
     },
     setCredentials: (state, action) => {
@@ -46,12 +46,12 @@ const authSlice = createSlice({
     clearAccessToken: (state) => {
       state.accessToken = null;
     },
-    setRefreshingToken: (state, action) => {
-      state.refreshingToken = action.payload;
+    setIsRefreshingToken: (state, action) => {
+      state.isRefreshingToken = action.payload;
     },
   },
 });
 
-export const { hydrate, setCredentials, clearCredentials, setAccessToken, clearAccessToken, setRefreshingToken } = authSlice.actions;
+export const { hydrate, setCredentials, clearCredentials, setAccessToken, clearAccessToken, setIsRefreshingToken } = authSlice.actions;
 
 export default authSlice.reducer;
