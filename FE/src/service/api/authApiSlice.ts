@@ -17,7 +17,12 @@ export const authApiSlice = apiSlice.injectEndpoints({
         body,
         credentials: "include",
       }),
-      invalidatesTags: ["User", "Auth"],
+      invalidatesTags: (result) => {
+        if (result?.success) {
+          return ["User", "Auth"]
+        }
+        return [];
+      },
     }),
 
     logout: builder.mutation<
@@ -30,7 +35,12 @@ export const authApiSlice = apiSlice.injectEndpoints({
         body,
         credentials: "include",
       }),
-      invalidatesTags: ["User", "Auth"],
+      invalidatesTags: (result) => {
+        if (result?.success) {
+          return ["User", "Auth"]
+        }
+        return [];
+      },
     }),
 
     register: builder.mutation<
@@ -43,7 +53,12 @@ export const authApiSlice = apiSlice.injectEndpoints({
         body,
         credentials: "include",
       }),
-      invalidatesTags: ["User", "Auth"],
+      invalidatesTags: (result) => {
+        if (result?.success) {
+          return ["User", "Auth"]
+        }
+        return [];
+      },
     }),
 
     tokenRefresh: builder.query<

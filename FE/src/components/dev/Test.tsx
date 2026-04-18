@@ -6,8 +6,11 @@ import DataFetchError from "../common/DataFetchError";
 import { tryGetApiErrorMsg } from "@/utils/tryGetApiErrorMsg";
 import { Box, Button, Text } from "@chakra-ui/react";
 import { useWebSocketClient } from "@/lib/websocket/client";
+import { useEffect } from "react";
+import { toaster } from "../ui/toaster";
+import { config } from "@/config/config";
 
-export default function Test() {
+export default function Test({ roomId }: { roomId: string }) {
   const {
     data: healthCheckQuery,
     error: fetchError,
@@ -15,6 +18,20 @@ export default function Test() {
   } = useHealthCheckQuery();
 
   const socket = useWebSocketClient()
+
+  useEffect(() => {
+    const subscription = socket.watch(config.WS_BROKER_ENDPOINT + `/greetings/room.${roomId}`).subscribe((message) => {
+      toaster.info({
+        title: "Message From Server",
+        description: message.body
+      })
+    });
+
+    return () => {
+      console.log("Cleaning up subscription...");
+      subscription.unsubscribe();
+    };
+  }, [socket, roomId]);
 
   if (isFetchingList) {
     return <DataLoading />
@@ -25,7 +42,10 @@ export default function Test() {
   }
 
   const handleTestSocket = () => {
-    console.log(socket.connected())
+    socket.publish({
+      destination: config.WS_APPLICATION_DESTINATION_PREFIX + `/hello/${roomId}`,
+      body: JSON.stringify({ name: "World" })
+    });
   }
 
   return (
