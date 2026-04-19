@@ -2,7 +2,7 @@ import { Flex, Text } from "@chakra-ui/react";
 
 export default function Home() {
   return (
-    <Flex direction={"column"} grow={1} bgColor={"green.100"} h="full" w="full">
+    <Flex direction={"column"} h="full" bgColor={"green.100"}>
       <Text>Content</Text>
     </Flex>
   );
