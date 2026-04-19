@@ -4,27 +4,27 @@ import React, { createContext, useContext } from "react";
 interface StoreState {
   isDesktop: boolean;
   isDirty: boolean;
-  isManuallyExpanded: boolean;
   isExpanded: boolean;
 }
+
+export type ResponsiveSidebarLayoutStoreState = StoreState
 
 type StoreAction =
   | { type: "SET_IS_DESKTOP"; payload: boolean }
   | { type: "SET_IS_DIRTY"; payload: boolean }
-  | { type: "SET_IS_MANUALLY_EXPANDED"; payload: boolean }
   | { type: "SET_IS_EXPANDED"; payload: boolean }
+  | { type: "TOGGLE_EXPAND" }
   | { type: "RESET" };
 
 const initialState: StoreState = {
-  isDesktop: true,
+  isDesktop: false,
   isDirty: false,
-  isManuallyExpanded: true,
-  isExpanded: true,
+  isExpanded: false,
 };
 
 function shouldExpand(state: StoreState) {
   if (state.isDirty) {
-    return state.isManuallyExpanded;
+    return state.isExpanded;
   }
   return !!state.isDesktop;
 }
@@ -39,12 +39,10 @@ function reducer(state: StoreState, action: StoreAction): StoreState {
       const newState: StoreState = { ...state, isDirty: action.payload }
       return { ...newState, isExpanded: shouldExpand(newState) };
     }
-    case "SET_IS_MANUALLY_EXPANDED": {
-      const newState: StoreState = { ...state, isManuallyExpanded: action.payload }
-      return { ...newState, isExpanded: shouldExpand(newState) };
-    }
     case "SET_IS_EXPANDED":
-      return { ...state, isExpanded: action.payload };
+      return { ...state, isExpanded: action.payload, isDirty: true };
+    case "TOGGLE_EXPAND":
+      return { ...state, isExpanded: !state.isExpanded, isDirty: true };
     case "RESET":
       return initialState;
     default:
@@ -54,16 +52,21 @@ function reducer(state: StoreState, action: StoreAction): StoreState {
 
 const StoreContext = createContext<Store<StoreState> | null>(null);
 
-export function ChatLayoutProvider(
-  { children }: { children: React.ReactNode },
+export function ResponsiveSidebarLayoutProvider(
+  props: { children: React.ReactNode, initialState?: Partial<StoreState> },
 ) {
   const [store] = React.useState(
-    () => new Store<StoreState>(initialState)
+    () => {
+      if (props.initialState) {
+        return new Store<StoreState>({ ...props.initialState, ...initialState })
+      }
+      return new Store<StoreState>(initialState)
+    }
   );
 
   return (
     <StoreContext.Provider value={store}>
-      {children}
+      {props.children}
     </StoreContext.Provider>
   );
 }
@@ -71,7 +74,7 @@ export function ChatLayoutProvider(
 // Internal hook to get the store
 function useStoreInstance() {
   const store = useContext(StoreContext);
-  if (!store) throw new Error("ChatLayoutReducerStore functions must be used inside ChatLayoutProvider");
+  if (!store) throw new Error("ResponsiveSidebarLayoutReducerStore functions must be used inside ResponsiveSidebarLayoutProvider");
   return store;
 }
 
@@ -89,7 +92,7 @@ function useDispatch() {
   };
 }
 
-export const ChatLayoutReducerStore = {
+export const ResponsiveSidebarLayoutReducerStore = {
   context: StoreContext,
   useStoreInstance,
   useSelector: useSelector,

@@ -2,7 +2,7 @@
 
 import Sidebar from "@/components/chat/layout/sidebar/Sidebar";
 import ResponsiveSidebarLayout from "@/components/layout/ResponsiveSidebarLayout";
-import { ChatLayoutProvider } from "@/context/chat/chat-layout-context";
+import { ResponsiveSidebarLayoutProvider } from "@/context/layout/responsive-sidebar-layout";
 import { useBreakpointValue } from "@chakra-ui/react";
 
 export default function ChatLayout({
@@ -13,8 +13,8 @@ export default function ChatLayout({
   const isDesktop = useBreakpointValue({ base: false, lg: true });
 
   return (
-    <ChatLayoutProvider>
+    <ResponsiveSidebarLayoutProvider initialState={{ isDesktop }}>
       <ResponsiveSidebarLayout sidebar={<Sidebar />} content={children} isDesktop={isDesktop} />
-    </ChatLayoutProvider>
+    </ResponsiveSidebarLayoutProvider>
   );
 }
