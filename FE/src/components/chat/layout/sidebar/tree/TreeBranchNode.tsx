@@ -2,11 +2,11 @@
 
 import { Highlight, Text, TreeView } from "@chakra-ui/react"
 import { LuChevronRight } from "react-icons/lu"
-import { SidebarTreeNode as Node } from "./Tree"
+import { ChatSidebarTreeNode as Node } from "./Tree"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 
-export const SidebarTreeBranchNode = (props: {
+export const ChatSidebarTreeBranchNode = (props: {
   query?: string,
   node: Node,
   nodeState: TreeView.NodeState
@@ -37,7 +37,7 @@ export const SidebarTreeBranchNode = (props: {
   )
 }
 
-export const SidebarTreeLeafNode = (props: {
+export const ChatSidebarTreeLeafNode = (props: {
   query?: string,
   node: Node,
 }

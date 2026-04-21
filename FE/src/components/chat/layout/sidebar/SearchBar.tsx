@@ -6,7 +6,7 @@ import { HStack, IconButton, Input } from "@chakra-ui/react";
 import { ChangeEvent, useEffect, useState } from "react";
 import { LuSearch } from "react-icons/lu";
 
-export default function SearchBar() {
+export default function ChatSidebarSearchBar() {
   const { useSelector, useDispatch } = ChatSidebarReducerStore;
   const dispatch = useDispatch();
   const menuQuery = useSelector(s => s.menuQuery);

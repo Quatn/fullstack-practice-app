@@ -2,7 +2,7 @@ import { ResponsiveSidebarLayoutReducerStore } from "@/context/layout/responsive
 import { IconButton } from "@chakra-ui/react"
 import { LuPanelLeftClose, LuPanelLeftOpen } from "react-icons/lu";
 
-export default function ToggleExpandButton() {
+export default function ChatSidebarToggleExpandButton() {
   const { useSelector, useDispatch } = ResponsiveSidebarLayoutReducerStore;
   const dispatch = useDispatch();
   const isExpanded = useSelector(s => s.isExpanded);

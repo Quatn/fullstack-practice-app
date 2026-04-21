@@ -5,8 +5,8 @@ import type {
   TreeViewRootProps,
 } from "@chakra-ui/react";
 import { Box, HStack, TreeView } from "@chakra-ui/react";
-import SidebarExpandCollapseButton from "./ExpandCollapseButton";
-import { SidebarTreeBranchNode, SidebarTreeLeafNode } from "./TreeBranchNode";
+import ChatSidebarExpandCollapseButton from "./ExpandCollapseButton";
+import { ChatSidebarTreeBranchNode, ChatSidebarTreeLeafNode } from "./TreeBranchNode";
 import { ChatSidebarReducerStore } from "@/context/chat/chat-sidebar";
 
 interface Node {
@@ -16,15 +16,15 @@ interface Node {
   children?: Node[];
 }
 
-export type SidebarTreeNode = Node;
+export type ChatSidebarTreeNode = Node;
 
-export type SidebarTreeProps = Omit<TreeViewRootProps, "collection"> & {
+export type ChatSidebarTreeProps = Omit<TreeViewRootProps, "collection"> & {
   expandedValue?: string[];
   onExpandedChange?: (details: TreeViewExpandedChangeDetails<Node>) => void;
   query?: string;
 };
 
-export const SidebarTree = (props: SidebarTreeProps) => {
+export const ChatSidebarTree = (props: ChatSidebarTreeProps) => {
   const { useSelector, useDispatch } = ChatSidebarReducerStore;
   const dispatch = useDispatch();
   const treeCollection = useSelector(s => s.treeCollection);
@@ -38,7 +38,7 @@ export const SidebarTree = (props: SidebarTreeProps) => {
       >
         <HStack justifyContent={"space-between"}>
           <TreeView.Label fontWeight={"bold"}>Menu</TreeView.Label>
-          <SidebarExpandCollapseButton />
+          <ChatSidebarExpandCollapseButton />
         </HStack>
         <TreeView.Tree>
           <TreeView.Node
@@ -46,10 +46,10 @@ export const SidebarTree = (props: SidebarTreeProps) => {
             render={({ node, nodeState }) =>
               nodeState.isBranch
                 ? (
-                  <SidebarTreeBranchNode node={node} nodeState={nodeState} query={props.query} />
+                  <ChatSidebarTreeBranchNode node={node} nodeState={nodeState} query={props.query} />
                 )
                 : (
-                  <SidebarTreeLeafNode node={node} query={props.query} />
+                  <ChatSidebarTreeLeafNode node={node} query={props.query} />
                 )}
           />
         </TreeView.Tree>

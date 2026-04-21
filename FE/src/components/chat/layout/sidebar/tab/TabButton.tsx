@@ -5,14 +5,14 @@ import { HStack, IconButton } from "@chakra-ui/react"
 import { useMemo } from "react";
 import { IconType } from "react-icons";
 
-export type TabButtonProps = {
+export type ChatSidebarTabButtonProps = {
   icon: IconType
   text: string
   onClick?: () => void
   tab?: ChatSidebarTab
 }
 
-export default function TabButton(props: TabButtonProps) {
+export default function ChatSidebarTabButton(props: ChatSidebarTabButtonProps) {
   const { icon, text, onClick, tab } = props;
 
   const { useSelector: useLayoutSelector, useDispatch: useLayoutDispatch } = ResponsiveSidebarLayoutReducerStore;

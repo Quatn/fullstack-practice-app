@@ -2,13 +2,13 @@ import { Box, For, HStack, Separator, Stack, Text } from "@chakra-ui/react";
 import ToggleExpandButton from "./ToggleExpandButton";
 import { ResponsiveSidebarLayoutReducerStore } from "@/context/layout/responsive-sidebar-layout";
 import SearchBar from "./SearchBar";
-import TabButton, { TabButtonProps } from "./tab/TabButton";
+import TabButton, { ChatSidebarTabButtonProps } from "./tab/TabButton";
 import { LuMessageCircleMore, LuNotebookText, LuPanelLeftClose, LuUserRound } from "react-icons/lu";
-import { SidebarTree } from "./tree/Tree";
-import SidebarTreeContainer from "./tree/TreeContainer";
+import { ChatSidebarTree } from "./tree/Tree";
+import ChatSidebarTreeContainer from "./tree/TreeContainer";
 import { ChatSidebarTab } from "@/constants/enum/chat-sidebar-tab";
 
-const tabs: TabButtonProps[] = [
+const tabs: ChatSidebarTabButtonProps[] = [
   {
     icon: LuMessageCircleMore,
     text: "Chat",
@@ -21,7 +21,7 @@ const tabs: TabButtonProps[] = [
   },
 ]
 
-export default function Sidebar() {
+export default function ChatSidebar() {
   const { useSelector, useDispatch } = ResponsiveSidebarLayoutReducerStore;
   const dispatch = useDispatch();
   const isExpanded = useSelector(s => s.isExpanded);
@@ -41,9 +41,9 @@ export default function Sidebar() {
             <TabButton key={index} {...item} />
           )}
         </For>
-        <SidebarTreeContainer>
-          <SidebarTree />
-        </SidebarTreeContainer>
+        <ChatSidebarTreeContainer>
+          <ChatSidebarTree />
+        </ChatSidebarTreeContainer>
       </Stack>
     </Box>
   )
