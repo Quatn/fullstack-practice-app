@@ -4,6 +4,12 @@ type TreeContainerProps = ContainerProps
 
 export default function SidebarTreeContainer(props: TreeContainerProps) {
   return (
-    <Container {...props} />
+    <Container
+      bg={"bg.panel"}
+      h={"full"}
+      rounded={2}
+      p={2}
+      {...props}
+    />
   )
 }

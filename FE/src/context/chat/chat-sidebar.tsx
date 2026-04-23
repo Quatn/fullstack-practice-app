@@ -1,4 +1,6 @@
-import { SidebarTreeNode } from "@/components/chat/layout/sidebar/tree/Tree";
+"use client"
+
+import { ChatSidebarTreeNode } from "@/components/chat/layout/sidebar/tree/Tree";
 import { ChatSidebarTab } from "@/constants/enum/chat-sidebar-tab";
 import { TreeCollection } from "@chakra-ui/react";
 import { Store, useStore } from "@tanstack/react-store";
@@ -6,22 +8,19 @@ import React, { createContext, useContext } from "react";
 
 interface StoreState {
   menuQuery: string;
-  treeCollection: TreeCollection<SidebarTreeNode> | null;
-  currentTab: ChatSidebarTab | null;
+  treeCollection: TreeCollection<ChatSidebarTreeNode> | null;
 }
 
 export type ChatSidebarStoreState = StoreState
 
 type StoreAction =
   | { type: "SET_MENU_QUERY"; payload: string }
-  | { type: "SET_TREE_COLLECTION_QUERY"; payload: TreeCollection<SidebarTreeNode> | null }
-  | { type: "SET_CURRENT_TAB"; payload: ChatSidebarTab | null }
+  | { type: "SET_TREE_COLLECTION_QUERY"; payload: TreeCollection<ChatSidebarTreeNode> | null }
   | { type: "RESET" };
 
 const initialState: StoreState = {
   menuQuery: "",
   treeCollection: null,
-  currentTab: null,
 };
 
 function reducer(state: StoreState, action: StoreAction): StoreState {
@@ -30,8 +29,6 @@ function reducer(state: StoreState, action: StoreAction): StoreState {
       return { ...state, menuQuery: action.payload };
     case "SET_TREE_COLLECTION_QUERY":
       return { ...state, treeCollection: action.payload };
-    case "SET_CURRENT_TAB":
-      return { ...state, currentTab: action.payload };
     case "RESET":
       return initialState;
     default:

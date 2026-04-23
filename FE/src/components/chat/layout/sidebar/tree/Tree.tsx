@@ -37,7 +37,7 @@ export const ChatSidebarTree = (props: ChatSidebarTreeProps) => {
         {...props}
       >
         <HStack justifyContent={"space-between"}>
-          <TreeView.Label fontWeight={"bold"}>Menu</TreeView.Label>
+          {/*<TreeView.Label fontWeight={"bold"}>Menu</TreeView.Label>*/}
           <ChatSidebarExpandCollapseButton />
         </HStack>
         <TreeView.Tree>

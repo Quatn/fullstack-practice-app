@@ -1,19 +1,29 @@
+'use client'
+
 import { ChatSidebarTab } from "@/constants/enum/chat-sidebar-tab";
 import { ChatSidebarReducerStore } from "@/context/chat/chat-sidebar";
 import { ResponsiveSidebarLayoutReducerStore } from "@/context/layout/responsive-sidebar-layout";
-import { HStack, IconButton } from "@chakra-ui/react"
-import { useMemo } from "react";
+import { urlDirMatch } from "@/utils/urlDirMatch";
+import { ButtonProps, HStack, IconButton } from "@chakra-ui/react"
+import { usePathname, useRouter } from "next/navigation";
+import { ReactNode, useMemo } from "react";
 import { IconType } from "react-icons";
 
-export type ChatSidebarTabButtonProps = {
-  icon: IconType
+const LINK_PREFIX = "/chat/";
+const MAX_DIR_MATCH_DEPTH = 2;
+
+export type ChatSidebarTabButtonProps = ButtonProps & {
+  icon: ReactNode
   text: string
-  onClick?: () => void
-  tab?: ChatSidebarTab
+  link?: string
 }
 
 export default function ChatSidebarTabButton(props: ChatSidebarTabButtonProps) {
-  const { icon, text, onClick, tab } = props;
+  const router = useRouter()
+
+  const { icon, text, onClick, link } = props;
+
+  const pathname = usePathname()
 
   const { useSelector: useLayoutSelector, useDispatch: useLayoutDispatch } = ResponsiveSidebarLayoutReducerStore;
   const layoutDispatch = useLayoutDispatch();
@@ -21,27 +31,26 @@ export default function ChatSidebarTabButton(props: ChatSidebarTabButtonProps) {
 
   const { useSelector: useSidebarSelector, useDispatch: useSidebarDispatch } = ChatSidebarReducerStore;
   const sidebarDispatch = useSidebarDispatch();
-  const currentTab = useSidebarSelector(s => s.currentTab);
 
   const isActive = useMemo(() => {
-    if (tab && tab == currentTab) {
+    if (link && urlDirMatch(pathname, link, MAX_DIR_MATCH_DEPTH)) {
       return true
     }
     return false
-  }, [tab, currentTab])
+  }, [link, pathname])
 
   return (
     <IconButton
-      onClick={() => {
-        if (onClick) onClick()
-        if (tab) sidebarDispatch({ type: "SET_CURRENT_TAB", payload: tab })
+      onClick={(v) => {
+        if (onClick) onClick(v);
+        if (link) router.push(LINK_PREFIX + link);
       }}
       variant={isActive ? "solid" : "outline"}
       aria-label={text}
       w="full"
     >
       <HStack justifyContent={"start"} w="full" px={2}>
-        {icon({})}{isExpanded && text}
+        {icon}{isExpanded && text}
       </HStack>
     </IconButton>
   )

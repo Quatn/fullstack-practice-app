@@ -1,7 +1,7 @@
 import { LocaleKey } from "@/lib/intl/intl";
 
 export enum ChatSidebarTab {
-  chat = "chat",
+  conversation = "conversation",
   project = "project",
 }
 
@@ -11,3 +11,13 @@ export const ChatSidebarTabLocalKeyMap = (tab: ChatSidebarTab): LocaleKey | unde
       return undefined;
   }
 }
+
+export const ChatSidebarTabLinkMap = (tab: ChatSidebarTab): string => {
+  switch (tab) {
+    case ChatSidebarTab.conversation:
+      return "conversation";
+    case ChatSidebarTab.project:
+      return "project";
+  }
+}
+

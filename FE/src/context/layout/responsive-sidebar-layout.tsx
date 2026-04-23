@@ -1,3 +1,5 @@
+"use client"
+
 import { Store, useStore } from "@tanstack/react-store";
 import React, { createContext, useContext } from "react";
 
