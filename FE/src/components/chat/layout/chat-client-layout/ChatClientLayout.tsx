@@ -1,6 +1,6 @@
 "use client"
 
-import { Splitter } from "@chakra-ui/react";
+import { Box, Splitter, Stack } from "@chakra-ui/react";
 import { useState } from "react";
 
 export type ChatClientLayoutProps = {
@@ -14,20 +14,13 @@ export default function ChatClientLayout(props: ChatClientLayoutProps) {
   const [sizes, setSizes] = useState([50, 50])
 
   return (
-    <Splitter.Root
-      panels={[{ id: "mp" }, { id: "cb", collapsible: true, collapsedSize: 1 }]}
-      orientation="vertical"
-      borderWidth="1px"
-      minH="60"
-      // onResize={(details) => details.}
-    >
-      <Splitter.Panel id="mp">
+    <Stack flexGrow={1}>
+      <Box flexGrow={1}>
         {messagePanel}
-      </Splitter.Panel>
-      <Splitter.ResizeTrigger id="mp:cb" />
-      <Splitter.Panel id="cb" height={"60px"}>
+      </Box>
+      <Box>
         {messageComposeBar}
-      </Splitter.Panel>
-    </Splitter.Root>
+      </Box>
+    </Stack>
   );
 }
