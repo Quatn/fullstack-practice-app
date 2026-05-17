@@ -2,9 +2,9 @@ package com.example.demo_springboot_api.utils;
 
 import com.example.demo_springboot_api.modules.auth.entity.AuthSession;
 import com.example.demo_springboot_api.modules.chat.constant.ConversationType;
+import com.example.demo_springboot_api.modules.chat.entity.ChatMessage;
 import com.example.demo_springboot_api.modules.chat.entity.Conversation;
 import com.example.demo_springboot_api.modules.chat.entity.ConversationParticipant;
-import com.example.demo_springboot_api.modules.chat.entity.Message;
 import com.example.demo_springboot_api.modules.user.entity.User;
 import java.util.Date;
 
@@ -57,15 +57,15 @@ public class MockData {
     return conversationParticipant;
   }
 
-  public static Message mockMessage() {
+  public static ChatMessage mockMessage() {
     Conversation conversation = mockConversation();
     User user = mockUser();
 
-    Message message = new Message();
+    ChatMessage message = new ChatMessage();
     message.setId(Long.valueOf(103));
     message.setConversation(conversation);
     message.setSender(user);
-    message.setContent("Test Message");
+    message.setContent("Test ChatMessage");
     message.setMetaData("test-meta-data=test");
     message.setCreatedat(new Date());
     message.setUpdatedat(new Date());

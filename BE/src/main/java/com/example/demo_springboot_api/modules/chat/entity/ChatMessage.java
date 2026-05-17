@@ -12,8 +12,8 @@ import jakarta.persistence.Table;
 import java.util.Date;
 
 @Entity
-@Table(name = "messages")
-public class Message {
+@Table(name = "chat_messages")
+public class ChatMessage {
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
   private @Nullable Long id;

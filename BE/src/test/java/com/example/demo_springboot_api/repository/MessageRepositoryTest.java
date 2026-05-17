@@ -3,7 +3,7 @@ package com.example.demo_springboot_api.repository;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import com.example.demo_springboot_api.modules.chat.entity.Message;
+import com.example.demo_springboot_api.modules.chat.entity.ChatMessage;
 import com.example.demo_springboot_api.modules.chat.repository.MessageRepository;
 import com.example.demo_springboot_api.utils.MockData;
 import jakarta.transaction.Transactional;
@@ -20,12 +20,12 @@ class MessageRepositoryTest extends BaseRepositoryTest {
 
   @Test
   void save_shouldSaveConversation() {
-    Message message = MockData.mockMessage();
+    ChatMessage message = MockData.mockMessage();
 
     // Get the repo to add a new record
     message.setId(null);
 
-    Message saved = messageRepository.save(message);
+    ChatMessage saved = messageRepository.save(message);
 
     assertEquals(message, saved);
     assertNotNull(saved.getId());
