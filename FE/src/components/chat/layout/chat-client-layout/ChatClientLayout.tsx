@@ -14,8 +14,8 @@ export default function ChatClientLayout(props: ChatClientLayoutProps) {
   const [sizes, setSizes] = useState([50, 50])
 
   return (
-    <Stack flexGrow={1}>
-      <Box flexGrow={1}>
+    <Stack minH={0} flexGrow={1}>
+      <Box minH={0} flexGrow={1}>
         {messagePanel}
       </Box>
       <Box>

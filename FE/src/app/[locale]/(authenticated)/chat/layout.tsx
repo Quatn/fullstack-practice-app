@@ -17,7 +17,7 @@ export default function ChatLayout({
     <ResponsiveSidebarLayoutProvider initialState={{ isDesktop }}>
       <ChatSidebarProvider>
         <Flex h="100vh" w="100vw">
-          <ResponsiveSidebarLayout sidebar={<Sidebar />} content={children} isDesktop={isDesktop} flexGrow={1} />
+          <ResponsiveSidebarLayout sidebar={<Sidebar />} content={children} isDesktop={isDesktop} />
         </Flex>
       </ChatSidebarProvider>
     </ResponsiveSidebarLayoutProvider>

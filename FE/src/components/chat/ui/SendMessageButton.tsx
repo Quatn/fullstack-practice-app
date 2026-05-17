@@ -1,9 +1,10 @@
-import { Flex, Text } from "@chakra-ui/react";
+import { IconButton } from "@chakra-ui/react";
+import { LuSendHorizontal } from "react-icons/lu";
 
 export default function ChatModuleSendMessageButton() {
   return (
-    <Flex direction={"column"} h="full" bg={"red"}>
-      <Text>ChatModuleSendMessageButton</Text>
-    </Flex>
+    <IconButton aria-label="Search database">
+      <LuSendHorizontal />
+    </IconButton>
   );
 }

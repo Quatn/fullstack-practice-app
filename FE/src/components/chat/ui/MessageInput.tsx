@@ -1,9 +1,7 @@
-import { Flex, Text } from "@chakra-ui/react";
+import { Input } from "@chakra-ui/react";
 
 export default function ChatModuleMessageInput() {
   return (
-    <Flex direction={"column"} h="full" bg={"red"}>
-      <Text>ChatModuleMessageInput</Text>
-    </Flex>
+    <Input flexGrow={1} placeholder="Enter message" />
   );
 }

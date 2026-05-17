@@ -27,7 +27,7 @@ export default function ChatSidebar() {
   const isExpanded = useSelector(s => s.isExpanded);
 
   return (
-    <Box bgColor={"bg.panel"} flexGrow={1} h="full" w="full" overflowY={"auto"} p={2}>
+    <Box bgColor={"bg.emphasized"} flexGrow={1} h="full" w="full" overflowY={"auto"} p={2}>
       <Stack alignItems={isExpanded ? "flex-start" : "center"} h={"full"}>
         <HStack w="full" justifyContent={isExpanded ? "flex-end" : "center"}>
           <ToggleExpandButton />

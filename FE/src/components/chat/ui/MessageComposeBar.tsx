@@ -1,9 +1,14 @@
-import { Flex, Text } from "@chakra-ui/react";
+import { HStack } from "@chakra-ui/react";
+import ChatModuleMessageInput from "./MessageInput";
+import ChatModuleSendMessageButton from "./SendMessageButton";
+import ChatModuleActionPanel from "./action-panel/ActionPanel";
 
 export default function ChatModuleMessageComposeBar() {
   return (
-    <Flex direction={"column"} h="full" bg={"red"}>
-      <Text>ChatModuleMessageComposeBar</Text>
-    </Flex>
+    <HStack p={2}>
+      <ChatModuleActionPanel />
+      <ChatModuleMessageInput />
+      <ChatModuleSendMessageButton />
+    </HStack>
   );
 }
