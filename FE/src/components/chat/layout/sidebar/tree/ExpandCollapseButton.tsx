@@ -7,7 +7,7 @@ const cmp = (a: string[], b: string[]) => {
   return a.length == b.length;
 };
 
-export default function ChatSidebarExpandCollapseButton() {
+export default function ChatSidebarTreeExpandCollapseButton() {
   const tree = useTreeViewContext();
   const isAllExpanded = useMemo(
     () => cmp(tree.expandedValue, tree.collection.getBranchValues()),

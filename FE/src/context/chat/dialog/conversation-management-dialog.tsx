@@ -1,47 +1,29 @@
 "use client"
 
-import { ChatSidebarTreeNode } from "@/components/chat/layout/sidebar/tree/Tree";
-import { ChatSidebarTab } from "@/constants/enum/chat-sidebar-tab";
-import { ButtonProps, TreeCollection } from "@chakra-ui/react";
 import { Store, useStore } from "@tanstack/react-store";
 import React, { createContext, useContext } from "react";
 
-interface PrimaryActionButtonProps {
-  label: string | React.ReactNode;
-  onClick?: () => void
-  style?: Partial<ButtonProps>;
-}
-
-export type ChatSidebarPrimaryActionButtonProps = PrimaryActionButtonProps;
-
 interface StoreState {
-  menuQuery: string;
-  treeCollection: TreeCollection<ChatSidebarTreeNode> | null;
-  primaryActionButtonProps: PrimaryActionButtonProps | null;
+  isOpen: boolean;
 }
 
-export type ChatSidebarStoreState = StoreState
+export type ChatConversationManagementDialogStoreState = StoreState
 
 type StoreAction =
-  | { type: "SET_MENU_QUERY"; payload: string }
-  | { type: "SET_TREE_COLLECTION_QUERY"; payload: TreeCollection<ChatSidebarTreeNode> | null }
-  | { type: "SET_PRIMARY_ACTION_BUTTON_PROPS"; payload: PrimaryActionButtonProps | null }
+  | { type: "SET_IS_OPEN"; payload: boolean }
+  | { type: "TOGGLE_OPEN"; }
   | { type: "RESET" };
 
 const initialState: StoreState = {
-  menuQuery: "",
-  treeCollection: null,
-  primaryActionButtonProps: null,
+  isOpen: false,
 };
 
 function reducer(state: StoreState, action: StoreAction): StoreState {
   switch (action.type) {
-    case "SET_MENU_QUERY":
-      return { ...state, menuQuery: action.payload };
-    case "SET_TREE_COLLECTION_QUERY":
-      return { ...state, treeCollection: action.payload };
-    case "SET_PRIMARY_ACTION_BUTTON_PROPS":
-      return { ...state, primaryActionButtonProps: action.payload };
+    case "SET_IS_OPEN":
+      return { ...state, isOpen: action.payload };
+    case "TOGGLE_OPEN":
+      return { ...state, isOpen: !state.isOpen };
     case "RESET":
       return initialState;
     default:
@@ -51,7 +33,7 @@ function reducer(state: StoreState, action: StoreAction): StoreState {
 
 const StoreContext = createContext<Store<StoreState> | null>(null);
 
-export function ChatSidebarProvider(
+export function ChatConversationManagementDialogProvider(
   props: { children: React.ReactNode, initialState?: Partial<StoreState> },
 ) {
   const [store] = React.useState(
@@ -73,7 +55,7 @@ export function ChatSidebarProvider(
 // Internal hook to get the store
 function useStoreInstance() {
   const store = useContext(StoreContext);
-  if (!store) throw new Error("ChatSidebarReducerStore functions must be used inside ChatSidebarProvider");
+  if (!store) throw new Error("ChatConversationManagementDialogReducerStore functions must be used inside ChatConversationManagementDialogProvider");
   return store;
 }
 
@@ -91,7 +73,7 @@ function useDispatch() {
   };
 }
 
-export const ChatSidebarReducerStore = {
+export const ChatConversationManagementDialogReducerStore = {
   context: StoreContext,
   useStoreInstance,
   useSelector: useSelector,

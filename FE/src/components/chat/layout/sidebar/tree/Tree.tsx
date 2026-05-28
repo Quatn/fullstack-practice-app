@@ -5,9 +5,10 @@ import type {
   TreeViewRootProps,
 } from "@chakra-ui/react";
 import { Box, HStack, TreeView } from "@chakra-ui/react";
-import ChatSidebarExpandCollapseButton from "./ExpandCollapseButton";
+import ChatSidebarTreeExpandCollapseButton from "./ExpandCollapseButton";
 import { ChatSidebarTreeBranchNode, ChatSidebarTreeLeafNode } from "./TreeBranchNode";
 import { ChatSidebarReducerStore } from "@/context/chat/chat-sidebar";
+import ChatSidebarTreePrimaryActionButton from "./PrimaryActionButton";
 
 interface Node {
   id: string;
@@ -28,6 +29,7 @@ export const ChatSidebarTree = (props: ChatSidebarTreeProps) => {
   const { useSelector, useDispatch } = ChatSidebarReducerStore;
   const dispatch = useDispatch();
   const treeCollection = useSelector(s => s.treeCollection);
+  const primaryActionButtonProps = useSelector(s => s.primaryActionButtonProps);
 
   if (treeCollection) {
     return (
@@ -38,7 +40,8 @@ export const ChatSidebarTree = (props: ChatSidebarTreeProps) => {
       >
         <HStack justifyContent={"space-between"}>
           {/*<TreeView.Label fontWeight={"bold"}>Menu</TreeView.Label>*/}
-          <ChatSidebarExpandCollapseButton />
+          <ChatSidebarTreeExpandCollapseButton />
+          <ChatSidebarTreePrimaryActionButton />
         </HStack>
         <TreeView.Tree>
           <TreeView.Node
