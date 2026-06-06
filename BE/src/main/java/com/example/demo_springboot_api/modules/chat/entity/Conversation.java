@@ -18,9 +18,9 @@ public class Conversation {
   @GeneratedValue(strategy = GenerationType.AUTO)
   private @Nullable Long id;
 
-  private String name;
+  private @Nullable String name;
 
-  private String coverUrl;
+  private @Nullable String coverUrl;
 
   @Enumerated(EnumType.STRING)
   private ConversationType type;
