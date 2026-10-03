@@ -15,7 +15,7 @@ import java.util.Date;
 @Table(name = "chat_messages")
 public class ChatMessage {
   @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private @Nullable Long id;
 
   @ManyToOne

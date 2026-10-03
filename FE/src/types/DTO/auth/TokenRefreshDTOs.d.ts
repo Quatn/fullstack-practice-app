@@ -1,10 +1,8 @@
 import { UserState } from "@/types/UserState";
-import { BaseResponse } from "../BaseResponse";
 
 export class TokenRefreshRequest { }
 
-export class TokenRefreshResponse extends BaseResponse<{
+export class TokenRefreshResponse {
   userState: UserState;
   accessToken: string;
-}> { }
-
+}

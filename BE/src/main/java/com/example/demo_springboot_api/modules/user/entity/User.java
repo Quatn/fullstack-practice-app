@@ -18,7 +18,7 @@ import org.jspecify.annotations.Nullable;
     })
 public class User {
   @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private @Nullable Long id;
 
   private String code;

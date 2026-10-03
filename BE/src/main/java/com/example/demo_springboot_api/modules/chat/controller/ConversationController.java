@@ -14,6 +14,8 @@ import com.example.demo_springboot_api.modules.chat.entity.Conversation;
 import com.example.demo_springboot_api.modules.chat.service.ConversationService;
 import jakarta.validation.Valid;
 import java.util.Date;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -35,11 +37,13 @@ public class ConversationController {
   public @ResponseBody ResponseEntity<ConversationListResponse> conversationList(
       Pageable pageable, @Valid ConversationListParameters params) {
 
+    List<Conversation> result = conversationService.list();
+
     return ResponseEntity.status(HttpStatus.OK)
         .body(
             ResponseHelper.success(
                 pageable.toString() + params.toString(),
-                new ConversationListResponseData(),
+                new ConversationListResponseData(result.toArray()),
                 ConversationListResponse::new));
   }
 
