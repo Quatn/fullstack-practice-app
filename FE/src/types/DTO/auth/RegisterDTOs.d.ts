@@ -1,5 +1,4 @@
 import { UserState } from "@/types/UserState";
-import { BaseResponse } from "../BaseResponse";
 
 export class RegisterRequest {
   code: string;
@@ -8,7 +7,6 @@ export class RegisterRequest {
   password: string;
 }
 
-export class RegisterResponse extends BaseResponse<{
+export class RegisterResponse {
   userState: UserState;
-}> { }
-
+}

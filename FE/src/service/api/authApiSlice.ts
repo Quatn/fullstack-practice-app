@@ -4,11 +4,12 @@ import { LoginRequest, LoginResponse } from "@/types/DTO/auth/LoginDTOs";
 import { LogoutRequest, LogoutResponse } from "@/types/DTO/auth/LogoutDTOs";
 import { RegisterRequest, RegisterResponse } from "@/types/DTO/auth/RegisterDTOs";
 import { TokenRefreshRequest, TokenRefreshResponse } from "@/types/DTO/auth/TokenRefreshDTOs";
+import { BaseResponse } from "@/types/DTO/BaseResponse";
 
 export const authApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     login: builder.mutation<
-      LoginResponse,
+      BaseResponse<Serialized<LoginResponse>>,
       LoginRequest
     >({
       query: (body) => ({
@@ -26,7 +27,7 @@ export const authApiSlice = apiSlice.injectEndpoints({
     }),
 
     logout: builder.mutation<
-      LogoutResponse,
+      BaseResponse<Serialized<LogoutResponse>>,
       LogoutRequest
     >({
       query: (body) => ({
@@ -44,7 +45,7 @@ export const authApiSlice = apiSlice.injectEndpoints({
     }),
 
     register: builder.mutation<
-      RegisterResponse,
+      BaseResponse<Serialized<RegisterResponse>>,
       RegisterRequest
     >({
       query: (body) => ({
@@ -62,7 +63,7 @@ export const authApiSlice = apiSlice.injectEndpoints({
     }),
 
     tokenRefresh: builder.query<
-      TokenRefreshResponse,
+      BaseResponse<Serialized<TokenRefreshResponse>>,
       TokenRefreshRequest
     >({
       query: () => ({

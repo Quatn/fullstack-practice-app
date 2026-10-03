@@ -15,7 +15,7 @@ import java.util.Date;
 @Table(name = "conversations")
 public class Conversation {
   @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private @Nullable Long id;
 
   private @Nullable String name;

@@ -1,12 +1,10 @@
 import { UserState } from "@/types/UserState";
-import { BaseResponse } from "../BaseResponse";
 
 export class LoginRequest {
   loginKey: string;
   password: string;
 }
 
-export class LoginResponse extends BaseResponse<{
+export class LoginResponse {
   userState: UserState;
-}> { }
-
+}

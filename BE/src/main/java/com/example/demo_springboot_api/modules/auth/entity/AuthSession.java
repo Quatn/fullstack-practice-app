@@ -20,7 +20,7 @@ import org.jspecify.annotations.Nullable;
     uniqueConstraints = {@UniqueConstraint(columnNames = "uuid")})
 public class AuthSession {
   @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private @Nullable Long id;
 
   @ManyToOne(fetch = FetchType.LAZY)

@@ -16,7 +16,7 @@ import org.jspecify.annotations.Nullable;
     })
 public class Project {
   @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private @Nullable Integer id;
 
   private String code;

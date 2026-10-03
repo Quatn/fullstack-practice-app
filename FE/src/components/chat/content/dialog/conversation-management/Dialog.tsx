@@ -1,7 +1,17 @@
 "use client"
 
+import { ConversationType } from "@/constants/enum/conversation-type";
 import { ChatConversationManagementDialogReducerStore } from "@/context/chat/dialog/conversation-management-dialog";
 import { Button, CloseButton, Dialog, Portal } from "@chakra-ui/react"
+import ConversationCreateForm from "./Form";
+
+type CreateConversationFormFields = {
+  name: string;
+  coverUrl: string;
+  type: ConversationType;
+  createdAt: Date;
+  updatedAt: Date;
+}
 
 export default function ConversationManagementDialog() {
   const { useSelector, useDispatch } = ChatConversationManagementDialogReducerStore;
@@ -22,6 +32,7 @@ export default function ConversationManagementDialog() {
               <Dialog.Title>Dialog Title</Dialog.Title>
             </Dialog.Header>
             <Dialog.Body>
+              <ConversationCreateForm />
             </Dialog.Body>
             <Dialog.Footer>
               <Dialog.ActionTrigger asChild>

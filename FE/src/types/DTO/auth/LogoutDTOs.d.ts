@@ -1,7 +1,5 @@
-import { BaseResponse } from "../BaseResponse";
-
 export class LogoutRequest { }
 
-export class LogoutResponse extends BaseResponse<{
+export class LogoutResponse {
   code?: string;
-}> { }
+}

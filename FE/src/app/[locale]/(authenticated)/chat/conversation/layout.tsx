@@ -7,7 +7,10 @@ import ResponsiveSidebarLayout from "@/components/layout/ResponsiveSidebarLayout
 import { ChatSidebarProvider, ChatSidebarReducerStore } from "@/context/chat/chat-sidebar";
 import { ChatConversationManagementDialogProvider, ChatConversationManagementDialogReducerStore } from "@/context/chat/dialog/conversation-management-dialog";
 import { ResponsiveSidebarLayoutProvider } from "@/context/layout/responsive-sidebar-layout";
+import { useListConversationQuery } from "@/service/api/conversationApiSlice";
+import { CONVERSATION_URL } from "@/service/constants";
 import { createTreeCollection, Flex, TreeCollection, useBreakpointValue } from "@chakra-ui/react";
+import check from "check-types";
 import { useEffect } from "react";
 
 const EXAMPLE_TREE_COLLECTION: TreeCollection<ChatSidebarTreeNode> = createTreeCollection<ChatSidebarTreeNode>({
@@ -37,8 +40,36 @@ export function ConversationTabLayout({
   const { useSelector: useDialogSelector, useDispatch: useDialogDispatch } = ChatConversationManagementDialogReducerStore;
   const dialogDispatch = useDialogDispatch();
 
+  const {
+    data: listConversationPaginatedResponse,
+    error: fetchError,
+    isFetching: isFetchingList,
+    refetch: refetchTable,
+  } = useListConversationQuery({});
+
   useEffect(() => {
-    sidebarDispatch({ type: "SET_TREE_COLLECTION_QUERY", payload: EXAMPLE_TREE_COLLECTION })
+    const listConversationPaginatedList = listConversationPaginatedResponse?.data;
+    if (check.undefined(listConversationPaginatedList) || !!fetchError) {
+      sidebarDispatch({ type: "SET_TREE_COLLECTION_QUERY", payload: EXAMPLE_TREE_COLLECTION })
+    }
+    else {
+      const col: TreeCollection<ChatSidebarTreeNode> = createTreeCollection<ChatSidebarTreeNode>({
+        nodeToValue: (node) => node.id,
+        nodeToString: (node) => node.name,
+        rootNode: {
+          id: "ROOT",
+          name: "",
+          children:
+            listConversationPaginatedList.data.map(conv => ({
+              id: conv.id,
+              name: conv.name,
+              href: `${CONVERSATION_URL}/${conv.id}`,
+            }))
+        }
+      })
+
+      sidebarDispatch({ type: "SET_TREE_COLLECTION_QUERY", payload: col })
+    }
     sidebarDispatch({
       type: "SET_PRIMARY_ACTION_BUTTON_PROPS",
       payload: {
@@ -48,7 +79,7 @@ export function ConversationTabLayout({
         }
       }
     })
-  }, [sidebarDispatch, dialogDispatch])
+  }, [sidebarDispatch, dialogDispatch, listConversationPaginatedResponse])
 
   return (
     <>{children}</>
